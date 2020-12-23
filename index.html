@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/control_utils/control_utils.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/json-to-csv-export"></script>
+</head>
+
+<body>
+  <div class="container">
+	<video class="input_video"></video>
+	<canvas class="output_canvas" width="1280px" height="720px"></canvas>
+  </div>
+  
+  
+  
+  <button id="do">do</button>
+  <button id="re">re</button>
+  <button id="mi">mi</button>
+  <button id="fa">fa</button>
+  <button id="so">so</button>
+  <button id="la">la</button>
+  <button id="ti">ti</button>
+</body>
+</html>
+
+
+
+<script type="module">
+const videoElement = document.getElementsByClassName('input_video')[0];
+const canvasElement = document.getElementsByClassName('output_canvas')[0];
+const canvasCtx = canvasElement.getContext('2d');
+
+
+var currentData;
+function onResults(results) {
+	console.log(results)
+	currentData = results
+  canvasCtx.save();
+  canvasCtx.clearRect(0, 0, canvasElement.width, canvasElement.height);
+  canvasCtx.drawImage(
+	  results.image, 0, 0, canvasElement.width, canvasElement.height);
+  if (results.multiHandLandmarks) {
+	for (const landmarks of results.multiHandLandmarks) {
+	  drawConnectors(canvasCtx, landmarks, HAND_CONNECTIONS,
+					 {color: '#00FF00', lineWidth: 5});
+	  drawLandmarks(canvasCtx, landmarks, {color: '#FF0000', lineWidth: 2});
+	}
+  }
+  canvasCtx.restore();
+}
+
+const hands = new Hands({locateFile: (file) => {
+  return `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${file}`;
+}});
+hands.setOptions({
+  maxNumHands: 2,
+  minDetectionConfidence: 0.5,
+  minTrackingConfidence: 0.5
+});
+hands.onResults(onResults);
+
+const camera = new Camera(videoElement, {
+  onFrame: async () => {
+	await hands.send({image: videoElement});
+  },
+  width: 1280,
+  height: 720
+});
+camera.start();
+
+
+var reply_click = function()
+{	exportToJsonFile(currentData, this.id + '.json')
+
+}
+
+
+document.getElementById('do').onclick = reply_click;
+document.getElementById('re').onclick = reply_click;
+document.getElementById('mi').onclick = reply_click;
+document.getElementById('fa').onclick = reply_click;
+document.getElementById('so').onclick = reply_click;
+document.getElementById('la').onclick = reply_click;
+document.getElementById('ti').onclick = reply_click;
+
+function exportToJsonFile(currentData, exportFileDefaultName) {
+	let dataStr = JSON.stringify(currentData);
+	let dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
+
+
+	let linkElement = document.createElement('a');
+	linkElement.setAttribute('href', dataUri);
+	linkElement.setAttribute('download', exportFileDefaultName);
+	linkElement.click();
+}
+
+
+</script>

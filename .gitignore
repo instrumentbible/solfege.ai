@@ -1,0 +1,5 @@
+.DS_Store
+.xcworkspace
+workspace.xcworkspace
+node_modules
+package-lock.json
