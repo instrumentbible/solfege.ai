@@ -2,21 +2,20 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/control_utils/control_utils.js" crossorigin="anonymous"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js" crossorigin="anonymous"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js" crossorigin="anonymous"></script>
-  <script src="https://cdn.jsdelivr.net/npm/json-to-csv-export"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js"	crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/control_utils/control_utils.js"	crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js"	crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js"					crossorigin="anonymous"></script>
 </head>
 
 <body>
-  <div class="container">
-	<video class="input_video"></video>
-	<canvas class="output_canvas" width="1280px" height="720px"></canvas>
+  <div>
+	<video  width="640" height="360"></video>
+	<canvas width="640" height="360"></canvas>
   </div>
   
   
-  
+  create training data
   <button id="do">do</button>
   <button id="re">re</button>
   <button id="mi">mi</button>
@@ -30,73 +29,161 @@
 
 
 <script type="module">
-const videoElement = document.getElementsByClassName('input_video')[0];
-const canvasElement = document.getElementsByClassName('output_canvas')[0];
-const canvasCtx = canvasElement.getContext('2d');
+const video		= document.getElementsByTagName('video' )[0];
+const canvas	= document.getElementsByTagName('canvas')[0];
+const ctx		= canvas.getContext('2d');
 
-
-var currentData;
-function onResults(results) {
-	console.log(results)
-	currentData = results
-  canvasCtx.save();
-  canvasCtx.clearRect(0, 0, canvasElement.width, canvasElement.height);
-  canvasCtx.drawImage(
-	  results.image, 0, 0, canvasElement.width, canvasElement.height);
-  if (results.multiHandLandmarks) {
-	for (const landmarks of results.multiHandLandmarks) {
-	  drawConnectors(canvasCtx, landmarks, HAND_CONNECTIONS,
-					 {color: '#00FF00', lineWidth: 5});
-	  drawLandmarks(canvasCtx, landmarks, {color: '#FF0000', lineWidth: 2});
+// object for hands
+var hand = {
+	right:{
+		points   : { x:[], y:[] }, // X/Y coordinates
+		distance : { x:[], y:[] }, // distance from wrist
+		normal   : { x:[], y:[] }  // normalized data
+	},
+	left:{
+		points   : { x:[], y:[] },
+		distance : { x:[], y:[] },
+		normal   : { x:[], y:[] }
 	}
-  }
-  canvasCtx.restore();
 }
 
-const hands = new Hands({locateFile: (file) => {
-  return `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${file}`;
-}});
-hands.setOptions({
-  maxNumHands: 2,
-  minDetectionConfidence: 0.5,
-  minTrackingConfidence: 0.5
-});
+function onResults(results) {
+
+	//  only run function if a hand is being tracked
+	if(results.multiHandedness){
+		clear(); // clear hand object
+		results.multiHandLandmarks.forEach( function (e, i, arr) {
+			
+			// if right hand
+			if(results.multiHandedness[i].label == 'Right'){
+				// get X/Y points
+				var points = new Promise((resolve, reject) => {
+					e.forEach((e, i, a) => {
+						hand.right.points.x.push(e.x);
+						hand.right.points.y.push(e.y);
+						if (i === a.length -1) resolve();
+					});
+				});
+				
+				// calculate the difference between points
+				var difference	= new Promise((resolve, reject) => {
+					var x		= new Promise((resolve, reject) => { hand.right.points.x.forEach((e, i, a) => { hand.right.distance.x.push(diff(hand.right.points.x[0], e)); if (i === a.length -1) {resolve();} }); });
+					var y		= new Promise((resolve, reject) => { hand.right.points.y.forEach((e, i, a) => { hand.right.distance.y.push(diff(hand.right.points.y[0], e)); if (i === a.length -1) {resolve();} }); });
+					x.then(() => { y.then(() => { resolve() })});
+				});
+				
+				// normalize the data from 0 to 1
+				var normal		= new Promise((resolve, reject) => {
+					var x		= new Promise((resolve, reject) => { hand.right.distance.x.forEach((e, i, a) => { hand.right.normal.x.push(normalize(e, Math.max(...hand.right.distance.x))); if (i === a.length -1) {resolve();} }); });
+					var y		= new Promise((resolve, reject) => { hand.right.distance.y.forEach((e, i, a) => { hand.right.normal.y.push(normalize(e, Math.max(...hand.right.distance.y))); if (i === a.length -1) {resolve();} }); });
+					x.then(() => { y.then(() => { resolve() })});
+				});
+				points.then(() => { difference.then(() => { normal.then(() => { console.log(hand.right.normal.x); }); }); });
+			}
+
+			// if left hand
+			if(results.multiHandedness[i].label == 'Left'){
+				var points = new Promise((resolve, reject) => {
+					e.forEach((e, i, a) => {
+						hand.left.points.x.push(flip(e.x)); // flip the X axis (now both right & left hand will return same data)
+						hand.left.points.y.push(e.y);
+						if (i === a.length -1) resolve();
+					});
+				});
+				var difference	= new Promise((resolve, reject) => {
+					var x		= new Promise((resolve, reject) => { hand.left.points.x.forEach((e, i, a) => { hand.left.distance.x.push(diff(hand.left.points.x[0], e)); if (i === a.length -1) {resolve();} }); });
+					var y		= new Promise((resolve, reject) => { hand.left.points.y.forEach((e, i, a) => { hand.left.distance.y.push(diff(hand.left.points.y[0], e)); if (i === a.length -1) {resolve();} }); });
+					x.then(() => { y.then(() => { resolve() })});
+				});
+				var normal		= new Promise((resolve, reject) => {
+					var x		= new Promise((resolve, reject) => { hand.left.distance.x.forEach((e, i, a) => { hand.left.normal.x.push(normalize(e, Math.max(...hand.left.distance.x))); if (i === a.length -1) {resolve();} }); });
+					var y		= new Promise((resolve, reject) => { hand.left.distance.y.forEach((e, i, a) => { hand.left.normal.y.push(normalize(e, Math.max(...hand.left.distance.y))); if (i === a.length -1) {resolve();} }); });
+					x.then(() => { y.then(() => { resolve() })});
+				});
+				points.then(() => { difference.then(() => { normal.then(() => { console.log(hand.left.normal.x); }); }); });
+			}
+		})
+	}
+	
+
+	// draw hands
+	ctx.save();
+	ctx.clearRect(				 0, 0, canvas.width, canvas.height);
+	ctx.drawImage(results.image, 0, 0, canvas.width, canvas.height);
+	if (results.multiHandLandmarks) {
+		for (const landmarks of results.multiHandLandmarks) {
+			drawConnectors(ctx, landmarks, HAND_CONNECTIONS, {color: '#00FF00', lineWidth: 5});
+			drawLandmarks (ctx, landmarks, 					 {color: '#FF0000', lineWidth: 2});
+		}
+	}
+	ctx.restore();
+}
+
+// setup hands
+const hands = new Hands({locateFile: (file) => { return `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${file}`; }});
+hands.setOptions({  maxNumHands: 2,  minDetectionConfidence: 0.5,  minTrackingConfidence: 0.5 });
 hands.onResults(onResults);
 
-const camera = new Camera(videoElement, {
-  onFrame: async () => {
-	await hands.send({image: videoElement});
-  },
-  width: 1280,
-  height: 720
+// camera setup
+new Camera(video, { onFrame: async () => { await hands.send({image: video}); }, width: 1280, height: 720 }).start();
+
+// add listener to all buttons
+document.querySelectorAll('button').forEach(btn => {
+   btn.addEventListener('click', e => {
+	   
+	   
+	   // wait 1 second
+	   setTimeout(function timer() {
+		   console.log("training");
+		   // record 10 data sets, at
+		   for (let i = 1; i < 10; i++) {
+			 setTimeout(function timer() {
+				 exportJSON(hand, btn.id + '.json'); console.log("training... step " + 1)
+				 if(i == 9){console.log("training done")}
+			 }, i * 1000);
+		   }
+	   }, 1000);
+	});
 });
-camera.start();
 
-
-var reply_click = function()
-{	exportToJsonFile(currentData, this.id + '.json')
-
+// export json
+function exportJSON(e, filename) {
+	let link = document.createElement('a');
+	    link.setAttribute('href', 'data:application/json;charset=utf-8,'+ encodeURIComponent(JSON.stringify(e, undefined, 2)));
+	    link.setAttribute('download', filename);
+	    link.click();
 }
 
-
-document.getElementById('do').onclick = reply_click;
-document.getElementById('re').onclick = reply_click;
-document.getElementById('mi').onclick = reply_click;
-document.getElementById('fa').onclick = reply_click;
-document.getElementById('so').onclick = reply_click;
-document.getElementById('la').onclick = reply_click;
-document.getElementById('ti').onclick = reply_click;
-
-function exportToJsonFile(currentData, exportFileDefaultName) {
-	let dataStr = JSON.stringify(currentData);
-	let dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
-
-
-	let linkElement = document.createElement('a');
-	linkElement.setAttribute('href', dataUri);
-	linkElement.setAttribute('download', exportFileDefaultName);
-	linkElement.click();
+// calculate the difference between two numbers
+function diff (a, b) {
+  if (a > b) { return a - b }
+  else 		 { return b - a }
 }
 
+// normalize values in range of 0 to 1
+function normalize(val, max) {
+	return (val - 0) / (max - 0);
+}
 
+// reverse 0-1 to 1-0, (for fliping left hand X axis data)
+function flip(e) {
+	return (1 - 0) + ((0 - 1) / (1 - 0)) * e;
+};
+
+// clear hand data
+function clear(){
+	hand.left.points.x   	= [];
+	hand.left.points.y   	= [];
+	hand.left.normal.x 		= [];
+	hand.left.normal.y 		= [];
+	hand.left.distance.x 	= [];
+	hand.left.distance.y 	= [];
+
+	hand.right.points.x   	= [];
+	hand.right.points.y   	= [];
+	hand.right.normal.x 	= [];
+	hand.right.normal.y 	= [];
+	hand.right.distance.x 	= [];
+	hand.right.distance.y 	= [];
+}
 </script>
