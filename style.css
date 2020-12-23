@@ -1,0 +1,25 @@
+*{margin:0}
+div{position: relative;}
+canvas{
+	width: calc(100% - 60px);
+	height: calc(100% - 60px);
+	margin: auto;
+	padding: 30px;
+	max-height: 90vh;
+	max-width: 90vh;
+	margin: 0 auto;
+	display: table;
+	margin: 0 auto;
+}
+table{
+	table-layout:fixed;width:100%
+	
+}
+canvas{
+	transform: rotateY(180deg);
+	-webkit-transform:rotateY(180deg);
+	-moz-transform:rotateY(180deg);
+}
+td{overflow:scroll}
+hr{  margin:1em; width:100%;text-align:left;margin-left:0}
+#log{font-size:1.1em}
