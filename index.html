@@ -6,6 +6,7 @@
   <script src="https://cdn.jsdelivr.net/npm/@mediapipe/control_utils/control_utils.js"	crossorigin="anonymous"></script>
   <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js"	crossorigin="anonymous"></script>
   <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js"					crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@2.0.0/dist/tf.min.js"></script>
 
   <link rel="stylesheet" href="style.css"></link>
 </head>
@@ -15,6 +16,8 @@
 	<video  width="640" height="360" hidden	></video>
 	<canvas width="640" height="360"		></canvas>
   </div>
+
+  <div id = "prediction"></div>
   
   <hr />
 	  <table>

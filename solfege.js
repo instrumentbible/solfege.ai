@@ -4,7 +4,6 @@ const img	= document.getElementsByTagName('img')[0];
 const ctx		= canvas.getContext('2d');
 const log		= document.getElementById('log' );
 
-
 // hand data
 var hand = {
 	right:{
@@ -59,6 +58,7 @@ function onResults(results) {
 				});
 				points.then(() => { difference.then(() => { normal.then(() => { }); }); });
 				showData()
+				predict()
 				
 			}
 
@@ -84,7 +84,9 @@ function onResults(results) {
 					x.then(() => { y.then(() => { resolve() })});
 				});
 				points.then(() => { difference.then(() => { normal.then(() => { }); }); });
-				showData()}
+				showData()
+				predict()
+			}
 			
 			
 		})
@@ -126,15 +128,15 @@ new Camera(video, { onFrame: async () => { await hands.send({ image: video }); }
 		   setTimeout(function timer() {
 			   print("starting...")
 
-			   // push 20 sets of data, at 500ms interval
-			   for (let i = 1; i < 20; i++) {
+			   // push 2000 sets of data, at 50ms interval
+			   for (let i = 1; i < 1000; i++) {
 				 setTimeout(function timer() {console.log(hand.left)
 					 if(hand.left.points.x[0] ){ tempData.push(hand.left)  }
 					 if(hand.right.points.x[0]){ tempData.push(hand.right) }
 					 print("training... step " + (i+ 1));
 					 console.log(hand.left.distance.y); console.log(hand.right.distance.y)
-					 if(i == 19){saveData()}
-				 }, i * 500);
+					 if(i == 999){saveData()}
+				 }, i * 25);
 			   }
 		   }, 1000);
 		   
@@ -200,13 +202,27 @@ new Camera(video, { onFrame: async () => { await hands.send({ image: video }); }
 		return (1 - 0) + ((0 - 1) / (1 - 0)) * e;
 	};
 		
-		
 
 	// predict
 	function predict(){
 		
+		//TODO: Fix this 
+
 		// pass live hand data to prediction model...
+
+		//get array of x and y coordinates that are currently detected
+		var x_array = hand.right.distance.x
+		var y_array = hand.right.distance.y
 		
+
+		//async function to make prediction (Josh I need ur help w this)
+		const predictFrame = async (pred_array) => {
+			model = await tf.loadLayersModel('models/new_model/model.json');
+			const prediction = await model.predict(pred_array);
+			console.log('prediction ', prediction)
+		}
+
+		predictFrame(x_array);
 	}
 		
 
