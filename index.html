@@ -1,14 +1,14 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="utf-8">
-  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js"	crossorigin="anonymous"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/control_utils/control_utils.js"	crossorigin="anonymous"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js"	crossorigin="anonymous"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js"					crossorigin="anonymous"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@2.0.0/dist/tf.min.js"></script>
-
-  <link rel="stylesheet" href="style.css"></link>
+	<title>Solfege</title>
+	<meta charset="utf-8">
+	<script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js"	crossorigin="anonymous"></script>
+	<script src="https://cdn.jsdelivr.net/npm/@mediapipe/control_utils/control_utils.js"	crossorigin="anonymous"></script>
+	<script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js"	crossorigin="anonymous"></script>
+	<script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js"					crossorigin="anonymous"></script>
+	<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@2.0.0/dist/tf.min.js"></script>
+	<link rel="stylesheet" href="style.css"></link>
 </head>
 
 <body>
@@ -17,8 +17,13 @@
 	<canvas width="640" height="360"		></canvas>
   </div>
 
-  <div id = "prediction"></div>
-  
+
+	  <p>
+		<span>prediction</span>
+		<span id="prediction"></span>
+		<img src="img/do.png">
+	  </p>
+
   <hr />
 	  <table>
 		  <tr>
@@ -48,13 +53,6 @@
   </pre>
   
   <hr />
-
-
-  <img src="img/do.png">
-	  <p>
-		<span>prediction</span>
-		<span id="prediction"></span>
-	  </p>
 
 </body>
 </html>

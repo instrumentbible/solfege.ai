@@ -56,9 +56,9 @@ function onResults(results) {
 					var y		= new Promise((resolve, reject) => { hand.right.distance.y.forEach((e, i, a) => { hand.right.normal.y.push(normalize(e, Math.max(...hand.right.distance.y))); if (i === a.length -1) {resolve();} }); });
 					x.then(() => { y.then(() => { resolve() })});
 				});
-				points.then(() => { difference.then(() => { normal.then(() => { }); }); });
+				points.then(() => { difference.then(() => { normal.then(() => { predict(hand.right) }); }); });
 				showData()
-				predict()
+				
 				
 			}
 
@@ -83,9 +83,8 @@ function onResults(results) {
 					var y		= new Promise((resolve, reject) => { hand.left.distance.y.forEach((e, i, a) => { hand.left.normal.y.push(normalize(e, Math.max(...hand.left.distance.y))); if (i === a.length -1) {resolve();} }); });
 					x.then(() => { y.then(() => { resolve() })});
 				});
-				points.then(() => { difference.then(() => { normal.then(() => { }); }); });
+				points.then(() => { difference.then(() => { normal.then(() => { predict(hand.left) }); }); });
 				showData()
-				predict()
 			}
 			
 			
@@ -202,35 +201,43 @@ new Camera(video, { onFrame: async () => { await hands.send({ image: video }); }
 		return (1 - 0) + ((0 - 1) / (1 - 0)) * e;
 	};
 		
+						  
 
-	// predict
-	function predict(){
-		
-		//TODO: Fix this 
+						  
 
-		// pass live hand data to prediction model...
+var handsigns = ['do','re','mi','fa','so','la','ti']
+						  
+						  
+						  
+						  
+// predict
+function predict(e){
+		const currentData = e.normal.x.concat(e.normal.y);
 
-		//get array of x and y coordinates that are currently detected
-		var x_array = hand.right.distance.x
-		var y_array = hand.right.distance.y
-		
-
-		//async function to make prediction (Josh I need ur help w this)
+		//async function to make prediction
 		const predictFrame = async (pred_array) => {
-			model = await tf.loadLayersModel('models/new_model/model.json');
-			const prediction = await model.predict(pred_array);
-			console.log('prediction ', prediction)
+			
+			// load model
+			var model = await tf.loadLayersModel('models/new_model/model.json');
+			
+			// run current data through model
+			const prediction =  model.predict(tf.tensor2d(pred_array,[1,42]));
+			
+			// returns an array of probabilty for each hand sign
+			var probabilty = prediction.dataSync();
+			
+			// returns index of highest likely hand sign
+			var getIndex = probabilty.indexOf(Math.max(...probabilty))
+			
+			showResult(handsigns[getIndex])
 		}
 
-		predictFrame(x_array);
-	}
+		predictFrame(currentData);
+}
 		
 
-	// update the <img> to show the predicted hand sign
-	function prediction(e){
-		img.src = "img/" + e + ".png"
-		document.getElementById('prediction').innerHTML =  e
-	}
-		
-	prediction('re');
-
+// update the <img> to show the predicted hand sign
+function showResult(e){
+	img.src = "img/" + e + ".png"
+	document.getElementById('prediction').innerHTML =  e
+}
