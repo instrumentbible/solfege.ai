@@ -1,5 +1,7 @@
 .DS_Store
 .xcworkspace
-workspace.xcworkspace
+solfege.xcworkspace
 node_modules
 package-lock.json
+server.crt
+server.key

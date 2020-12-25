@@ -13,7 +13,7 @@ from mlxtend.plotting import plot_confusion_matrix
 import matplotlib.pyplot as plt
 import tensorflowjs as tfjs
 
-CATEGORIES = ['do','re','mi','fa','so','la'] #categories for classification
+CATEGORIES = ['do','di','ra','re','ri','me','mi','fa','fi','se','so','si','le','la','li','te','ti'] #categories for classification
 
 #function that counts the total number of datapoints 
 def count_data():
@@ -26,9 +26,6 @@ def count_data():
 
 FEATURE_SIZE = 42 #specify feature size (21 for x coordinates, 21 for y coordinates)
 DATA_SIZE = count_data() #find data size
-
-
-
 
 def load_data():
 

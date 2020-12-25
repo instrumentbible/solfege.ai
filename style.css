@@ -10,6 +10,8 @@ canvas{
 	margin: 0 auto;
 	display: table;
 	margin: 0 auto;
+	border-radius: 5em;
+	
 }
 table{
 	table-layout:fixed;width:100%
@@ -21,6 +23,26 @@ canvas{
 	-moz-transform:rotateY(180deg);
 }
 td{overflow:scroll}
+td span{font-size:2em}
 hr{  margin:1em; width:100%;text-align:left;margin-left:0}
 #log{font-size:1.1em}
 img{height:100px;width:100px}
+
+#righthand{
+	-webkit-transform: scaleX(-1);
+	transform: scaleX(-1);
+}
+#lefthand{
+	
+}
+
+#results{
+	text-align:center
+}
+footer {
+	bottom:0;
+
+	display:block;
+	text-align:center;
+	padding:2em
+}

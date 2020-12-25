@@ -2,13 +2,20 @@
 <html>
 <head>
 	<title>Solfege</title>
+	<meta rel ="description" content="Detect solfege hand signs using machine learning." />
 	<meta charset="utf-8">
+	<link rel="stylesheet" href="style.css"></link>
+	
+	<script src="js/JZZ.js"></script>
+	<script src="js/JZZ.synth.Tiny.js"></script>
+	<script src="js/JZZ.input.Kbd.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js"	crossorigin="anonymous"></script>
 	<script src="https://cdn.jsdelivr.net/npm/@mediapipe/control_utils/control_utils.js"	crossorigin="anonymous"></script>
 	<script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js"	crossorigin="anonymous"></script>
 	<script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js"					crossorigin="anonymous"></script>
 	<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@2.0.0/dist/tf.min.js"></script>
-	<link rel="stylesheet" href="style.css"></link>
+	
+
 </head>
 
 <body>
@@ -16,13 +23,13 @@
 	<video  width="640" height="360" hidden	></video>
 	<canvas width="640" height="360"		></canvas>
   </div>
-
-
-	  <p>
-		<span>prediction</span>
-		<span id="prediction"></span>
-		<img src="img/do.png">
-	  </p>
+  
+  <table id="results">
+	  <tr>
+		  <td><img id="righthand" src="img/do.png"></img></br><span id="rightprediction"></span></br><div id="rightMIDI"></></td>
+		  <td><img id="lefthand"  src="img/do.png"></img></br><span id="leftprediction" ></span></br><div id="leftMIDI" ></><></></td>
+	  </tr>
+  </table>
 
   <hr />
 	  <table>
@@ -34,28 +41,50 @@
   <hr / >
   
   
-  create training data
+  
+  <hr />
+  
+  
+  <p>create training data</p>
   <button id="do">do</button>
+  <button id="di">di</button>
+  <button id="ra">ra</button>
   <button id="re">re</button>
+  <button id="ri">ri</button>
+  <button id="me">me</button>
   <button id="mi">mi</button>
   <button id="fa">fa</button>
+  <button id="fi">fi</button>
+  <button id="se">se</button>
   <button id="so">so</button>
+  <button id="si">si</button>
+  <button id="le">le</button>
   <button id="la">la</button>
+  <button id="li">li</button>
+  <button id="te">te</button>
   <button id="ti">ti</button>
   <br><br>
   <pre>
 	  <p id="log">
 	  Make a hand sign, then click the corresponding button.
 	  
-	  it will wait 1 second, take 20 snapshots at 500ms interval,
+	  it will wait 1 second, take 2000 snapshots at 25ms interval,
 	  then export the data to json.
 	  </p>
   </pre>
   
   <hr />
+  <footer>
+	  <span>
+		  a project by <a href="https://github.com/ryankemmer" >Ryan Kemmer</a> and <a href="https://github.com/joshstovall">Josh Stovall</a>
+		  </span>
+  </footer>
+  
 
 </body>
+
 </html>
 
+<script src="/js/midi.js"></script>
 
 <script src="solfege.js"></script>

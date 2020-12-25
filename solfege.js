@@ -1,6 +1,6 @@
 const video		= document.getElementsByTagName('video' )[0];
 const canvas	= document.getElementsByTagName('canvas')[0];
-const img	= document.getElementsByTagName('img')[0];
+const img	= document.getElementById('handsign');
 const ctx		= canvas.getContext('2d');
 const log		= document.getElementById('log' );
 
@@ -56,7 +56,7 @@ function onResults(results) {
 					var y		= new Promise((resolve, reject) => { hand.right.distance.y.forEach((e, i, a) => { hand.right.normal.y.push(normalize(e, Math.max(...hand.right.distance.y))); if (i === a.length -1) {resolve();} }); });
 					x.then(() => { y.then(() => { resolve() })});
 				});
-				points.then(() => { difference.then(() => { normal.then(() => { predict(hand.right) }); }); });
+				points.then(() => { difference.then(() => { normal.then(() => { predict(hand.right, 'right') }); }); });
 				showData()
 				
 				
@@ -83,7 +83,7 @@ function onResults(results) {
 					var y		= new Promise((resolve, reject) => { hand.left.distance.y.forEach((e, i, a) => { hand.left.normal.y.push(normalize(e, Math.max(...hand.left.distance.y))); if (i === a.length -1) {resolve();} }); });
 					x.then(() => { y.then(() => { resolve() })});
 				});
-				points.then(() => { difference.then(() => { normal.then(() => { predict(hand.left) }); }); });
+				points.then(() => { difference.then(() => { normal.then(() => { predict(hand.left, 'left') }); }); });
 				showData()
 			}
 			
@@ -116,102 +116,104 @@ hands.onResults(onResults);
 new Camera(video, { onFrame: async () => { await hands.send({ image: video }); }, width: 1280, height: 720 }).start();
 	
 	
-	
-	var tempData = []
-	// add listener to all buttons
-	document.querySelectorAll('button').forEach(btn => {
-	   btn.addEventListener('click', e => {
-		   tempData = [];
-		
-		   // wait 1 second
-		   setTimeout(function timer() {
-			   print("starting...")
 
-			   // push 2000 sets of data, at 50ms interval
-			   for (let i = 1; i < 1000; i++) {
-				 setTimeout(function timer() {console.log(hand.left)
-					 if(hand.left.points.x[0] ){ tempData.push(hand.left)  }
-					 if(hand.right.points.x[0]){ tempData.push(hand.right) }
-					 print("training... step " + (i+ 1));
-					 console.log(hand.left.distance.y); console.log(hand.right.distance.y)
-					 if(i == 999){saveData()}
-				 }, i * 25);
-			   }
-		   }, 1000);
-		   
-		   function saveData(){
-			   print("training done")
-			   exportJSON(tempData, btn.id + '.json');
+var tempData = []
+// add listener to all buttons
+document.querySelectorAll('button').forEach(btn => {
+   btn.addEventListener('click', e => {
+	   tempData = [];
+	
+	   // wait 1 second
+	   setTimeout(function timer() {
+		   print("starting...")
+
+		   // push 2000 sets of data, at 25ms interval
+		   for (let i = 1; i < 1000; i++) {
+			 setTimeout(function timer() {console.log(hand.left)
+				 if(hand.left.points.x[0] ){ tempData.push(hand.left)  }
+				 if(hand.right.points.x[0]){ tempData.push(hand.right) }
+				 print("training... step " + (i+ 1));
+				 console.log(hand.left.distance.y); console.log(hand.right.distance.y)
+				 if(i == 999){saveData()}
+			 }, i * 25);
 		   }
-		});
+	   }, 1000);
+	   
+	   function saveData(){
+		   print("training done")
+		   exportJSON(tempData, btn.id + '.json');
+	   }
 	});
+});
 
-	// print
-	function print(e){
-		log.innerHTML = e;
-		console.log(e)
-	}
+// print
+function print(e){
+	log.innerHTML = e;
+	console.log(e)
+}
+
+
+// show the live data to html
+function showData(){
+
+	right.innerHTML =            "<br><b>cordinates</b><br>x: "+hand.right.points  .x.map(function(each_element){ return round(each_element) })
+	right.innerHTML +=							      "<br>y: "+hand.right.points  .y.map(function(each_element){ return round(each_element) })
+	right.innerHTML +=  "<br><b>distance</b> from wrist<br>x: "+hand.right.distance.x.map(function(each_element){ return round(each_element) })
+	right.innerHTML +=            				      "<br>y: "+hand.right.distance.y.map(function(each_element){ return round(each_element) })
+	right.innerHTML +=      "<br><b>normalized</b> data<br>x: "+hand.right.normal  .x.map(function(each_element){ return round(each_element) })
+	right.innerHTML +=            				      "<br>y: "+hand.right.normal  .y.map(function(each_element){ return round(each_element) })
+	
+	left .innerHTML =            "<br><b>cordinates</b><br>x: "+hand.left.points  .x.map(function(each_element){ return round(each_element) })
+	left .innerHTML +=            			          "<br>y: "+hand.left.points  .y.map(function(each_element){ return round(each_element) })
+	left .innerHTML +=  "<br><b>distance</b> from wrist<br>x: "+hand.left.distance.x.map(function(each_element){ return round(each_element) })
+	left .innerHTML +=            					  "<br>y: "+hand.left.distance.y.map(function(each_element){ return round(each_element) })
+	left .innerHTML +=      "<br><b>normalized</b> data<br>x: "+hand.left.normal  .x.map(function(each_element){ return round(each_element) })
+	left .innerHTML +=            				      "<br>y: "+hand.left.normal  .y.map(function(each_element){ return round(each_element) })
+}
+
+// round printed data to 2 decimals
+function round(e){
+	return parseFloat(e).toFixed(2)
+}
 
 	
-	// show the live data to html
-	function showData(){
+// export json
+function exportJSON(e, filename) {
+	let link = document.createElement('a');
+		link.setAttribute('href', 'data:application/json;charset=utf-8,'+ encodeURIComponent(JSON.stringify(e, undefined, 2)));
+		link.setAttribute('download', filename);
+		link.click();
+}
 
-		right.innerHTML =            "<br><b>cordinates</b><br>x: "+hand.right.points  .x.map(function(each_element){ return round(each_element) })
-		right.innerHTML +=							      "<br>y: "+hand.right.points  .y.map(function(each_element){ return round(each_element) })
-		right.innerHTML +=  "<br><b>distance</b> from wrist<br>x: "+hand.right.distance.x.map(function(each_element){ return round(each_element) })
-		right.innerHTML +=            				      "<br>y: "+hand.right.distance.y.map(function(each_element){ return round(each_element) })
-		right.innerHTML +=      "<br><b>normalized</b> data<br>x: "+hand.right.normal  .x.map(function(each_element){ return round(each_element) })
-		right.innerHTML +=            				      "<br>y: "+hand.right.normal  .y.map(function(each_element){ return round(each_element) })
-		
-		left .innerHTML =            "<br><b>cordinates</b><br>x: "+hand.left.points  .x.map(function(each_element){ return round(each_element) })
-		left .innerHTML +=            			          "<br>y: "+hand.left.points  .y.map(function(each_element){ return round(each_element) })
-		left .innerHTML +=  "<br><b>distance</b> from wrist<br>x: "+hand.left.distance.x.map(function(each_element){ return round(each_element) })
-		left .innerHTML +=            					  "<br>y: "+hand.left.distance.y.map(function(each_element){ return round(each_element) })
-		left .innerHTML +=      "<br><b>normalized</b> data<br>x: "+hand.left.normal  .x.map(function(each_element){ return round(each_element) })
-		left .innerHTML +=            				      "<br>y: "+hand.left.normal  .y.map(function(each_element){ return round(each_element) })
-	}
+// calculate the difference between two numbers
+function diff (a, b) {
+  if (a > b) { return a - b }
+  else 		 { return b - a }
+}
+
+// normalize values in range of 0 to 1
+function normalize(val, max) {
+	return (val - 0) / (max - 0);
+}
+
+// reverse 0-1 to 1-0, (for fliping left hand X axis data)
+function flip(e) {
+	return (1 - 0) + ((0 - 1) / (1 - 0)) * e;
+};
 	
-	// round printed data to 2 decimals
-	function round(e){
-		return parseFloat(e).toFixed(2)
-	}
-	
-		
-	// export json
-	function exportJSON(e, filename) {
-		let link = document.createElement('a');
-			link.setAttribute('href', 'data:application/json;charset=utf-8,'+ encodeURIComponent(JSON.stringify(e, undefined, 2)));
-			link.setAttribute('download', filename);
-			link.click();
-	}
-
-	// calculate the difference between two numbers
-	function diff (a, b) {
-	  if (a > b) { return a - b }
-	  else 		 { return b - a }
-	}
-
-	// normalize values in range of 0 to 1
-	function normalize(val, max) {
-		return (val - 0) / (max - 0);
-	}
-
-	// reverse 0-1 to 1-0, (for fliping left hand X axis data)
-	function flip(e) {
-		return (1 - 0) + ((0 - 1) / (1 - 0)) * e;
-	};
-		
-						  
+					  
+// change this after training new model
+var handsigns = ['do','re','mi','fa','so','la','ti'];
+// ['do','di','ra','re','ri','me','mi','fa','fi','se','so','si','le','la','li','te','ti'];
 
 						  
+						  
 
-var handsigns = ['do','re','mi','fa','so','la','ti']
-						  
-						  
-						  
+// midi value for each handsign
+var solfegeMIDI = {	'do':0, 'di':1, 'ra':1, 're':2, 'ri':3, 'me':3, 'mi':4, 'fa':5, 'fi':6, 'se':6, 'so':7, 'si':8, 'le':8, 'la':9, 'li':10, 'te':10, 'ti':11 }
 						  
 // predict
-function predict(e){
+function predict(e, handedness){
 		const currentData = e.normal.x.concat(e.normal.y);
 
 		//async function to make prediction
@@ -222,22 +224,57 @@ function predict(e){
 			
 			// run current data through model
 			const prediction =  model.predict(tf.tensor2d(pred_array,[1,42]));
-			
 			// returns an array of probabilty for each hand sign
 			var probabilty = prediction.dataSync();
 			
 			// returns index of highest likely hand sign
 			var getIndex = probabilty.indexOf(Math.max(...probabilty))
 			
-			showResult(handsigns[getIndex])
+			showResult( getIndex, handedness)
 		}
 
 		predictFrame(currentData);
 }
 		
 
-// update the <img> to show the predicted hand sign
-function showResult(e){
-	img.src = "img/" + e + ".png"
-	document.getElementById('prediction').innerHTML =  e
+// keep track of the current hand sign for each hand
+var currentLeft  = 60
+var currentRight = 60
+						  
+						  		  
+// update <img> and play MIDI
+function showResult(e, handedness){
+
+	// returns the current sign as a string ('do' or 're')
+	var currentSign = handsigns[e];
+
+	if(handedness == 'left'){
+
+		document.getElementById('lefthand').src = "img/" + currentSign + ".png";
+		document.getElementById('leftprediction').innerHTML = currentSign;
+		
+		
+		// play MIDI
+		if(currentLeft != e){
+			leftMIDI.allNotesOff(0);
+			leftMIDI.noteOn(0, solfegeMIDI[currentSign] + 60, 127);
+			// TO DO:  only play MIDI after the model returns 'do' 5 times in a row
+			// this will prevent MIDI note from playing while transitioning hand signs
+		}
+		
+		currentLeft = e;
+	}
+	else if(handedness == 'right'){
+		
+		document.getElementById('righthand').src = "img/" + currentSign + ".png";
+		document.getElementById('rightprediction').innerHTML =  currentSign;
+		
+		if(currentRight != e){
+			rightMIDI.allNotesOff(0);
+			rightMIDI.noteOn(0, solfegeMIDI[currentSign] + 60, 127);
+		}
+		
+		currentRight = e;
+
+	}
 }
