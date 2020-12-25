@@ -1,6 +1,6 @@
 const video		= document.getElementsByTagName('video' )[0];
 const canvas	= document.getElementsByTagName('canvas')[0];
-const img	= document.getElementById('handsign');
+const img		= document.getElementById('handsign');
 const ctx		= canvas.getContext('2d');
 const log		= document.getElementById('log' );
 
@@ -238,43 +238,49 @@ function predict(e, handedness){
 		
 
 // keep track of the current hand sign for each hand
-var currentLeft  = 60
-var currentRight = 60
+// [current sign index, number of times in a row]
+var currentLeft  = [0,0]
+var currentRight = [0,0]
 						  
-						  		  
 // update <img> and play MIDI
 function showResult(e, handedness){
-
-	// returns the current sign as a string ('do' or 're')
-	var currentSign = handsigns[e];
-
+		
 	if(handedness == 'left'){
-
-		document.getElementById('lefthand').src = "img/" + currentSign + ".png";
-		document.getElementById('leftprediction').innerHTML = currentSign;
 		
-		
-		// play MIDI
-		if(currentLeft != e){
-			leftMIDI.allNotesOff(0);
-			leftMIDI.noteOn(0, solfegeMIDI[currentSign] + 60, 127);
-			// TO DO:  only play MIDI after the model returns 'do' 5 times in a row
-			// this will prevent MIDI note from playing while transitioning hand signs
+		// only play MIDI if hand has been the same sign 10 frames in a row
+		if(currentLeft[1] > 10 && currentLeft[0] != e){
+			
+			currentLeft[0] = e;
+			currentLeft[1] = 0;
+			
+			document.getElementById('lefthand').src = "img/" + handsigns[e] + ".png";
+			document.getElementById('leftprediction').innerHTML = handsigns[e];
+			
+			leftMIDI.allNotesOff(0); // clear current MIDI note
+			leftMIDI.noteOn(0, solfegeMIDI[handsigns[e]] + 60, 127); // play MIDI
+			
+		} else {
+			currentLeft[1]++
 		}
 		
-		currentLeft = e;
 	}
+		
 	else if(handedness == 'right'){
 		
-		document.getElementById('righthand').src = "img/" + currentSign + ".png";
-		document.getElementById('rightprediction').innerHTML =  currentSign;
-		
-		if(currentRight != e){
+		if(currentRight[1] > 10 && currentRight[0] != e){
+			
+			currentRight[0] = e;
+			currentRight[1] = 0;
+			
+			document.getElementById('righthand').src = "img/" + handsigns[e] + ".png";
+			document.getElementById('rightprediction').innerHTML =  handsigns[e];
+			
 			rightMIDI.allNotesOff(0);
-			rightMIDI.noteOn(0, solfegeMIDI[currentSign] + 60, 127);
+			rightMIDI.noteOn(0, solfegeMIDI[handsigns[e]] + 60, 127);
+			
+		} else {
+			currentRight[1]++
 		}
-		
-		currentRight = e;
-
 	}
+		
 }
