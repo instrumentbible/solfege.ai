@@ -31,68 +31,418 @@
 		  <td><img id="lefthand"  src="img/do.png"></img></br><span id="leftprediction" ></span></br><div id="leftMIDI" ></></td>
 	  </tr>
   </table>
-  <hr />
+  
 	  <table>
 		  <tr>
 			  <td>
 				  <pre id="right"></pre>
 				 <hr />
-			  <table><b>probability</b>
-				  <tr>
-					  <td>do<input class="do" /></td>
-					  <td>di<input class="di" /></td>
-					  <td>ra<input class="ra" /></td>
-					  <td>re<input class="re" /></td>
-					  <td>ri<input class="ri" /></td>
-					  <td>me<input class="me" /></td>
-					  <td>mi<input class="mi" /></td>
-					  <td>fa<input class="fa" /></td>
-					  <td>fi<input class="fi" /></td>
-					  <td>se<input class="se" /></td>
-					  <td>so<input class="so" /></td>
-					  <td>si<input class="si" /></td>
-					  <td>le<input class="le" /></td>
-					  <td>la<input class="la" /></td>
-					  <td>li<input class="li" /></td>
-					  <td>te<input class="te" /></td>
-					  <td>ti<input class="ti" /></td>
+			  <table><b>probability</b> (of each hand sign)
+				  <tr class="probRight">
+					  <td><img src="img/do.png"></img><br>do<input class="do" /></td>
+					  <td><img src="img/di.png"></img><br>di<input class="di" /></td>
+					  <td><img src="img/ra.png"></img><br>ra<input class="ra" /></td>
+					  <td><img src="img/re.png"></img><br>re<input class="re" /></td>
+					  <td><img src="img/ri.png"></img><br>ri<input class="ri" /></td>
+					  <td><img src="img/me.png"></img><br>me<input class="me" /></td>
+					  <td><img src="img/mi.png"></img><br>mi<input class="mi" /></td>
+					  <td><img src="img/fa.png"></img><br>fa<input class="fa" /></td>
+					  <td><img src="img/fi.png"></img><br>fi<input class="fi" /></td>
+					  <td><img src="img/se.png"></img><br>se<input class="se" /></td>
+					  <td><img src="img/so.png"></img><br>so<input class="so" /></td>
+					  <td><img src="img/si.png"></img><br>si<input class="si" /></td>
+					  <td><img src="img/le.png"></img><br>le<input class="le" /></td>
+					  <td><img src="img/la.png"></img><br>la<input class="la" /></td>
+					  <td><img src="img/li.png"></img><br>li<input class="li" /></td>
+					  <td><img src="img/te.png"></img><br>te<input class="te" /></td>
+					  <td><img src="img/ti.png"></img><br>ti<input class="ti" /></td>
 				  </tr>
 			  </table>
 			  
 			  </td>
 			  <td>
 				  <pre id="left" ></pre>
-				  <hr /><b>probability</b>
+				  <hr /><b>probability</b> (of each hand sign)
 			  <table>
-				  <tr>
-					  <td>do<input class="do" /></td>
-					  <td>di<input class="di" /></td>
-					  <td>ra<input class="ra" /></td>
-					  <td>re<input class="re" /></td>
-					  <td>ri<input class="ri" /></td>
-					  <td>me<input class="me" /></td>
-					  <td>mi<input class="mi" /></td>
-					  <td>fa<input class="fa" /></td>
-					  <td>fi<input class="fi" /></td>
-					  <td>se<input class="se" /></td>
-					  <td>so<input class="so" /></td>
-					  <td>si<input class="si" /></td>
-					  <td>le<input class="le" /></td>
-					  <td>la<input class="la" /></td>
-					  <td>li<input class="li" /></td>
-					  <td>te<input class="te" /></td>
-					  <td>ti<input class="ti" /></td>
+				  <tr class="probLeft">
+					  <td><img src="img/do.png"></img><br>do<input class="do" /></td>
+					  <td><img src="img/di.png"></img><br>di<input class="di" /></td>
+					  <td><img src="img/ra.png"></img><br>ra<input class="ra" /></td>
+					  <td><img src="img/re.png"></img><br>re<input class="re" /></td>
+					  <td><img src="img/ri.png"></img><br>ri<input class="ri" /></td>
+					  <td><img src="img/me.png"></img><br>me<input class="me" /></td>
+					  <td><img src="img/mi.png"></img><br>mi<input class="mi" /></td>
+					  <td><img src="img/fa.png"></img><br>fa<input class="fa" /></td>
+					  <td><img src="img/fi.png"></img><br>fi<input class="fi" /></td>
+					  <td><img src="img/se.png"></img><br>se<input class="se" /></td>
+					  <td><img src="img/so.png"></img><br>so<input class="so" /></td>
+					  <td><img src="img/si.png"></img><br>si<input class="si" /></td>
+					  <td><img src="img/le.png"></img><br>le<input class="le" /></td>
+					  <td><img src="img/la.png"></img><br>la<input class="la" /></td>
+					  <td><img src="img/li.png"></img><br>li<input class="li" /></td>
+					  <td><img src="img/te.png"></img><br>te<input class="te" /></td>
+					  <td><img src="img/ti.png"></img><br>ti<input class="ti" /></td>
 				  </tr>
 			  </table>
 			  </td>
 		  </tr>
 	  </table>
+
+  <table>
+<tr>
+<td>
+  <table><hr />
+	  <b>coordinates</b> (of each bone)
+		  <tr class="xcoord">
+
+			  <td><input /></td>
+			  <td><input /></td>
+			  <td><input /></td>
+			  <td><input /></td>
+			  <td><input /></td>
+			  <td><input /></td>
+			  <td><input /></td>
+			  <td><input /></td>
+			  <td><input /></td>
+			  <td><input /></td>
+			  <td><input /></td>
+			  <td><input /></td>
+			  <td><input /></td>
+			  <td><input /></td>
+			  <td><input /></td>
+			  <td><input /></td>
+			  <td><input /></td>
+			  <td><input /></td>
+			  <td><input /></td>
+			  <td><input /></td>
+			  <td><input /></td>
+			
+		  </tr>
+		  
+		  <tr class="ycoord">
+
+			  <td><input /></td>
+			  <td><input /></td>
+			  <td><input /></td>
+			  <td><input /></td>
+			  <td><input /></td>
+			  <td><input /></td>
+			  <td><input /></td>
+			  <td><input /></td>
+			  <td><input /></td>
+			  <td><input /></td>
+			  <td><input /></td>
+			  <td><input /></td>
+			  <td><input /></td>
+			  <td><input /></td>
+			  <td><input /></td>
+			  <td><input /></td>
+			  <td><input /></td>
+			  <td><input /></td>
+			  <td><input /></td>
+			  <td><input /></td>
+			  <td><input /></td>
+			
+		  </tr>
+	  </table>
+  </td>
+<td>
+  <table><hr />
+	  <b>coordinates</b> (of each bone)
+	  <tr class="xcoordLeft">
+
+		  <td><input /></td>
+		  <td><input /></td>
+		  <td><input /></td>
+		  <td><input /></td>
+		  <td><input /></td>
+		  <td><input /></td>
+		  <td><input /></td>
+		  <td><input /></td>
+		  <td><input /></td>
+		  <td><input /></td>
+		  <td><input /></td>
+		  <td><input /></td>
+		  <td><input /></td>
+		  <td><input /></td>
+		  <td><input /></td>
+		  <td><input /></td>
+		  <td><input /></td>
+		  <td><input /></td>
+		  <td><input /></td>
+		  <td><input /></td>
+		  <td><input /></td>
+		
+	  </tr>
+	  
+	  <tr class="ycoordLeft">
+
+		  <td><input /></td>
+		  <td><input /></td>
+		  <td><input /></td>
+		  <td><input /></td>
+		  <td><input /></td>
+		  <td><input /></td>
+		  <td><input /></td>
+		  <td><input /></td>
+		  <td><input /></td>
+		  <td><input /></td>
+		  <td><input /></td>
+		  <td><input /></td>
+		  <td><input /></td>
+		  <td><input /></td>
+		  <td><input /></td>
+		  <td><input /></td>
+		  <td><input /></td>
+		  <td><input /></td>
+		  <td><input /></td>
+		  <td><input /></td>
+		  <td><input /></td>
+		
+	  </tr>
+  </table></td>
+	  </tr>
+	  
+	  <tr>
+<td>
+  <table><hr />
+	  <b>distance</b> (from wrist)
+		  <tr class="xdistanceRight">
+
+			  <td><input /></td>
+			  <td><input /></td>
+			  <td><input /></td>
+			  <td><input /></td>
+			  <td><input /></td>
+			  <td><input /></td>
+			  <td><input /></td>
+			  <td><input /></td>
+			  <td><input /></td>
+			  <td><input /></td>
+			  <td><input /></td>
+			  <td><input /></td>
+			  <td><input /></td>
+			  <td><input /></td>
+			  <td><input /></td>
+			  <td><input /></td>
+			  <td><input /></td>
+			  <td><input /></td>
+			  <td><input /></td>
+			  <td><input /></td>
+			  <td><input /></td>
+			
+		  </tr>
+		  
+		  <tr class="ydistanceRight">
+
+			  <td><input /></td>
+			  <td><input /></td>
+			  <td><input /></td>
+			  <td><input /></td>
+			  <td><input /></td>
+			  <td><input /></td>
+			  <td><input /></td>
+			  <td><input /></td>
+			  <td><input /></td>
+			  <td><input /></td>
+			  <td><input /></td>
+			  <td><input /></td>
+			  <td><input /></td>
+			  <td><input /></td>
+			  <td><input /></td>
+			  <td><input /></td>
+			  <td><input /></td>
+			  <td><input /></td>
+			  <td><input /></td>
+			  <td><input /></td>
+			  <td><input /></td>
+			
+		  </tr>
+	  </table>
+  </td>
+<td>
+  <table><hr />
+	  <b>distance</b> (from wrist)
+	  <tr class="xdistanceLeft">
+
+		  <td><input /></td>
+		  <td><input /></td>
+		  <td><input /></td>
+		  <td><input /></td>
+		  <td><input /></td>
+		  <td><input /></td>
+		  <td><input /></td>
+		  <td><input /></td>
+		  <td><input /></td>
+		  <td><input /></td>
+		  <td><input /></td>
+		  <td><input /></td>
+		  <td><input /></td>
+		  <td><input /></td>
+		  <td><input /></td>
+		  <td><input /></td>
+		  <td><input /></td>
+		  <td><input /></td>
+		  <td><input /></td>
+		  <td><input /></td>
+		  <td><input /></td>
+		
+	  </tr>
+	  
+	  <tr class="ydistanceLeft">
+
+		  <td><input /></td>
+		  <td><input /></td>
+		  <td><input /></td>
+		  <td><input /></td>
+		  <td><input /></td>
+		  <td><input /></td>
+		  <td><input /></td>
+		  <td><input /></td>
+		  <td><input /></td>
+		  <td><input /></td>
+		  <td><input /></td>
+		  <td><input /></td>
+		  <td><input /></td>
+		  <td><input /></td>
+		  <td><input /></td>
+		  <td><input /></td>
+		  <td><input /></td>
+		  <td><input /></td>
+		  <td><input /></td>
+		  <td><input /></td>
+		  <td><input /></td>
+		
+	  </tr>
+  </table></td>
+</tr><tr>
+	<td>
+  
+  
+  <table><hr />
+	  <b>normalized</b> (distance normalized 1 to 0)
+		  <tr class="xnormalRight">
+
+			  <td><input /></td>
+			  <td><input /></td>
+			  <td><input /></td>
+			  <td><input /></td>
+			  <td><input /></td>
+			  <td><input /></td>
+			  <td><input /></td>
+			  <td><input /></td>
+			  <td><input /></td>
+			  <td><input /></td>
+			  <td><input /></td>
+			  <td><input /></td>
+			  <td><input /></td>
+			  <td><input /></td>
+			  <td><input /></td>
+			  <td><input /></td>
+			  <td><input /></td>
+			  <td><input /></td>
+			  <td><input /></td>
+			  <td><input /></td>
+			  <td><input /></td>
+			
+		  </tr>
+		  
+		  <tr class="ynormalRight">
+
+			  <td><input /></td>
+			  <td><input /></td>
+			  <td><input /></td>
+			  <td><input /></td>
+			  <td><input /></td>
+			  <td><input /></td>
+			  <td><input /></td>
+			  <td><input /></td>
+			  <td><input /></td>
+			  <td><input /></td>
+			  <td><input /></td>
+			  <td><input /></td>
+			  <td><input /></td>
+			  <td><input /></td>
+			  <td><input /></td>
+			  <td><input /></td>
+			  <td><input /></td>
+			  <td><input /></td>
+			  <td><input /></td>
+			  <td><input /></td>
+			  <td><input /></td>
+			
+		  </tr>
+	  </table>
+  </td>
+<td>
+  <table><hr />
+	  <b>normalized</b>  (distance normalized 1 to 0)
+	  <tr class="xnormalLeft">
+
+		  <td><input /></td>
+		  <td><input /></td>
+		  <td><input /></td>
+		  <td><input /></td>
+		  <td><input /></td>
+		  <td><input /></td>
+		  <td><input /></td>
+		  <td><input /></td>
+		  <td><input /></td>
+		  <td><input /></td>
+		  <td><input /></td>
+		  <td><input /></td>
+		  <td><input /></td>
+		  <td><input /></td>
+		  <td><input /></td>
+		  <td><input /></td>
+		  <td><input /></td>
+		  <td><input /></td>
+		  <td><input /></td>
+		  <td><input /></td>
+		  <td><input /></td>
+		
+	  </tr>
+	  
+	  <tr class="ynormalLeft">
+
+		  <td><input /></td>
+		  <td><input /></td>
+		  <td><input /></td>
+		  <td><input /></td>
+		  <td><input /></td>
+		  <td><input /></td>
+		  <td><input /></td>
+		  <td><input /></td>
+		  <td><input /></td>
+		  <td><input /></td>
+		  <td><input /></td>
+		  <td><input /></td>
+		  <td><input /></td>
+		  <td><input /></td>
+		  <td><input /></td>
+		  <td><input /></td>
+		  <td><input /></td>
+		  <td><input /></td>
+		  <td><input /></td>
+		  <td><input /></td>
+		  <td><input /></td>
+		
+	  </tr>
+	  </td>
+</tr>
+  </table></td>
+	  </tr>
+  </table>
+  
 	  <hr />
-
-
-  <hr />
-  
-  
+<div id="train">
+ How to create training data
+  <pre>
+	  <p id="log">
+	  Make a hand sign, then click the corresponding button.
+	  It will wait 1 second, take 2000 snapshots at 25ms interval, then export the data to json.
+	  </p>
+  </pre>
   <p>create training data</p>
   <button id="do">do</button>
   <button id="di">di</button>
@@ -112,23 +462,12 @@
   <button id="te">te</button>
   <button id="ti">ti</button>
   <br><br>
-  <pre>
-	  <p id="log">
-	  Make a hand sign, then click the corresponding button.
-	  
-	  it will wait 1 second, take 2000 snapshots at 25ms interval,
-	  then export the data to json.
-	  </p>
-  </pre>
-  
+  </div>
   <hr />
-  <footer>
-	  <span>
-		  a project by <a href="https://github.com/ryankemmer" >Ryan Kemmer</a> and <a href="https://github.com/joshstovall">Josh Stovall</a>
-		  </span>
-  </footer>
   
-
+  <footer>
+	  <p>a project by <a href="https://github.com/ryankemmer" >Ryan Kemmer</a> and <a href="https://github.com/joshstovall">Josh Stovall</a></p>
+  </footer>
 </body>
 
 </html>

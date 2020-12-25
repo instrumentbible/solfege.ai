@@ -26,7 +26,7 @@ td{overflow:scroll}
 td span{font-size:2em}
 hr{  margin:1em; width:100%;text-align:left;margin-left:0}
 #log{font-size:1.1em}
-img{height:100px;width:100px}
+img{height:100px;width:100px;max-width:100%}
 
 #righthand{
 	-webkit-transform: scaleX(-1);
@@ -36,6 +36,14 @@ img{height:100px;width:100px}
 	
 }
 
+.probRight img{
+	-webkit-transform: scaleX(-1);
+	transform: scaleX(-1);
+	opacity: 0
+}
+.probLeft img{
+	opacity: 0
+}
 #results{
 	text-align:center
 }
@@ -48,3 +56,4 @@ footer {
 }
 
 input {border: 0;color:black }
+#train{text-align:center}

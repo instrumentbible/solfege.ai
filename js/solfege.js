@@ -155,20 +155,35 @@ function print(e){
 
 // show the live data to html
 function showData(){
-
-	right.innerHTML =            "<br><b>cordinates</b><br>x: "+hand.right.points  .x.map(function(each_element){ return round(each_element) }).toString().replace(/,0/g, ' ').replace(/0.00/g, '.00')
-	right.innerHTML +=							      "<br>y: "+hand.right.points  .y.map(function(each_element){ return round(each_element) }).toString().replace(/,0/g, ' ').replace(/0.00/g, '.00')
-	right.innerHTML +=  "<br><b>distance</b> from wrist<br>x: "+hand.right.distance.x.map(function(each_element){ return round(each_element) }).toString().replace(/,0/g, ' ').replace(/0.00/g, '.00')
-	right.innerHTML +=            				      "<br>y: "+hand.right.distance.y.map(function(each_element){ return round(each_element) }).toString().replace(/,0/g, ' ').replace(/0.00/g, '.00')
-	right.innerHTML +=      "<br><b>normalized</b> data<br>x: "+hand.right.normal  .x.map(function(each_element){ return round(each_element) }).toString().replace(/,0/g, ' ').replace(/0.00/g, '.00').replace(/,1/g, ' 1').replace(/1.00/g, '<furthest style="color:red">1.0</furthest>')
-	right.innerHTML +=            				      "<br>y: "+hand.right.normal  .y.map(function(each_element){ return round(each_element) }).toString().replace(/,0/g, ' ').replace(/0.00/g, '.00').replace(/,1/g, ' 1').replace(/1.00/g, '<furthest style="color:red">1.0</furthest>')
+	if(hand.right.normal.x[1]){
+		hand.right.normal.x.forEach( function (e, i, arr) { document.getElementsByClassName("xcoord")[0].getElementsByTagName('td')[i].getElementsByTagName('input')[0].value = round(e) })
+		hand.right.normal.y.forEach( function (e, i, arr) { document.getElementsByClassName("ycoord")[0].getElementsByTagName('td')[i].getElementsByTagName('input')[0].value = round(e) })
+		hand.right.distance.x.forEach( function (e, i, arr) { document.getElementsByClassName("xdistanceRight")[0].getElementsByTagName('td')[i].getElementsByTagName('input')[0].value = round(e)})
+		hand.right.distance.y.forEach( function (e, i, arr) { document.getElementsByClassName("ydistanceRight")[0].getElementsByTagName('td')[i].getElementsByTagName('input')[0].value = round(e)})
+		hand.right.normal.x.forEach( function (e, i, arr) {
+			document.getElementsByClassName("xnormalRight")[0].getElementsByTagName('td')[i].getElementsByTagName('input')[0].value = round(e)
+			document.getElementsByClassName("xnormalRight")[0].getElementsByTagName('td')[i].getElementsByTagName('input')[0].style.opacity = e
+		 })
+		hand.right.normal.y.forEach( function (e, i, arr) {
+			document.getElementsByClassName("ynormalRight")[0].getElementsByTagName('td')[i].getElementsByTagName('input')[0].value = round(e)
+			document.getElementsByClassName("ynormalRight")[0].getElementsByTagName('td')[i].getElementsByTagName('input')[0].style.opacity = e
+		 })
+	}
+	if(hand.left.normal.x[1]){
+		hand.left.normal.y.forEach( function (e, i, arr) { document.getElementsByClassName("ycoordLeft")[0].getElementsByTagName('td')[i].getElementsByTagName('input')[0].value = round(e)})
+		hand.left.normal.x.forEach( function (e, i, arr) { document.getElementsByClassName("xcoordLeft")[0].getElementsByTagName('td')[i].getElementsByTagName('input')[0].value = round(e)})
+		hand.left.distance.y.forEach( function (e, i, arr) { document.getElementsByClassName("ydistanceLeft")[0].getElementsByTagName('td')[i].getElementsByTagName('input')[0].value = round(e)})
+		hand.left.distance.x.forEach( function (e, i, arr) { document.getElementsByClassName("xdistanceLeft")[0].getElementsByTagName('td')[i].getElementsByTagName('input')[0].value = round(e)})
+		hand.left.normal.y.forEach( function (e, i, arr) {
+			document.getElementsByClassName("ynormalLeft")[0].getElementsByTagName('td')[i].getElementsByTagName('input')[0].value = round(e)
+			document.getElementsByClassName("ynormalLeft")[0].getElementsByTagName('td')[i].getElementsByTagName('input')[0].style.opacity = e
+		})
+		hand.left.normal.x.forEach( function (e, i, arr) {
+			document.getElementsByClassName("xnormalLeft")[0].getElementsByTagName('td')[i].getElementsByTagName('input')[0].value = round(e)
+			document.getElementsByClassName("xnormalLeft")[0].getElementsByTagName('td')[i].getElementsByTagName('input')[0].style.opacity = e
+		})
+	}
 	
-	left .innerHTML =            "<br><b>cordinates</b><br>x: "+hand.left.points  .x.map(function(each_element){ return round(each_element) }).toString().replace(/,0/g, ' ').replace(/0.00/g, '.00')
-	left .innerHTML +=            			          "<br>y: "+hand.left.points  .y.map(function(each_element){ return round(each_element) }).toString().replace(/,0/g, ' ').replace(/0.00/g, '.00')
-	left .innerHTML +=  "<br><b>distance</b> from wrist<br>x: "+hand.left.distance.x.map(function(each_element){ return round(each_element) }).toString().replace(/,0/g, ' ').replace(/0.00/g, '.00')
-	left .innerHTML +=            					  "<br>y: "+hand.left.distance.y.map(function(each_element){ return round(each_element) }).toString().replace(/,0/g, ' ').replace(/0.00/g, '.00')
-	left .innerHTML +=      "<br><b>normalized</b> data<br>x: "+hand.left.normal  .x.map(function(each_element){ return round(each_element) }).toString().replace(/,0/g, ' ').replace(/0.00/g, '.00').replace(/,1/g, ' 1').replace(/1.00/g, '<furthest style="color:red">1.0</furthest>')
-	left .innerHTML +=            				      "<br>y: "+hand.left.normal  .y.map(function(each_element){ return round(each_element) }).toString().replace(/,0/g, ' ').replace(/0.00/g, '.00').replace(/,1/g, ' 1').replace(/1.00/g, '<furthest style="color:red">1.0</furthest>')
 }
 
 // round printed data to 2 decimals
@@ -204,7 +219,7 @@ function flip(e) {
 					  
 // change this after training new model
 var handsigns = ['do','re','mi','fa','so','la','ti'];
-// ['do','di','ra','re','ri','me','mi','fa','fi','se','so','si','le','la','li','te','ti'];
+var handsigns1 = ['do','di','ra','re','ri','me','mi','fa','fi','se','so','si','le','la','li','te','ti'];
 
 						  
 						  
@@ -224,19 +239,24 @@ function predict(e, handedness){
 			
 			// run current data through model
 			const prediction =  model.predict(tf.tensor2d(pred_array,[1,42]));
+			
 			// returns an array of probabilty for each hand sign
 			var probabilty = prediction.dataSync();
 			
 			probabilty.forEach(myFunction);
 
-			function myFunction(item, index) {
-			  console.log(handsigns[index], item)
+			function myFunction(e, i) {
 				
 				if(handedness == 'left'){
-					document.getElementsByClassName(handsigns[index])[1].value = (item * 100).toFixed(1)
+					document.getElementsByClassName(handsigns[i])[1].value = (e * 100).toFixed(1);
+					document.getElementsByClassName(handsigns[i])[1].style.opacity =   e + 0.2;
+					document.getElementsByClassName("probLeft")[0].getElementsByTagName('td')[handsigns.indexOf(handsigns[i])].getElementsByTagName('img')[0].style.opacity = e 
 					}
 				else {
-						document.getElementsByClassName(handsigns[index])[0].value = (item * 100).toFixed(1)
+					document.getElementsByClassName(handsigns[i])[0].value = (e * 100).toFixed(1);
+					document.getElementsByClassName(handsigns[i])[0].style.opacity =   e + 0.2;
+					document.getElementsByClassName("probRight")[0].getElementsByTagName('td')[handsigns.indexOf(handsigns[i])].getElementsByTagName('img')[0].style.opacity = e
+
 					}
 			}
 			// returns index of highest likely hand sign
@@ -268,7 +288,7 @@ function showResult(e, handedness){
 			
 			document.getElementById('lefthand').src = "img/" + handsigns[e] + ".png";
 			document.getElementById('leftprediction').innerHTML = handsigns[e];
-			document.getElementsByClassName(handsigns[e])[1].style.color =  'red';
+			//document.getElementsByClassName(handsigns[e])[1].style.color =  'red';
 
 			leftMIDI.allNotesOff(0); // clear current MIDI note
 			leftMIDI.noteOn(0, solfegeMIDI[handsigns[e]] + 60, 127); // play MIDI
@@ -288,7 +308,7 @@ function showResult(e, handedness){
 			
 			document.getElementById('righthand').src = "img/" + handsigns[e] + ".png";
 			document.getElementById('rightprediction').innerHTML =  handsigns[e];
-			document.getElementsByClassName(handsigns[e])[0].style.color =  'red';
+			//document.getElementsByClassName(handsigns[e])[0].style.color =  'red';
 
 			rightMIDI.allNotesOff(0);
 			rightMIDI.noteOn(0, solfegeMIDI[handsigns[e]] + 60, 127);
