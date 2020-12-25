@@ -156,19 +156,19 @@ function print(e){
 // show the live data to html
 function showData(){
 
-	right.innerHTML =            "<br><b>cordinates</b><br>x: "+hand.right.points  .x.map(function(each_element){ return round(each_element) })
-	right.innerHTML +=							      "<br>y: "+hand.right.points  .y.map(function(each_element){ return round(each_element) })
-	right.innerHTML +=  "<br><b>distance</b> from wrist<br>x: "+hand.right.distance.x.map(function(each_element){ return round(each_element) })
-	right.innerHTML +=            				      "<br>y: "+hand.right.distance.y.map(function(each_element){ return round(each_element) })
-	right.innerHTML +=      "<br><b>normalized</b> data<br>x: "+hand.right.normal  .x.map(function(each_element){ return round(each_element) })
-	right.innerHTML +=            				      "<br>y: "+hand.right.normal  .y.map(function(each_element){ return round(each_element) })
+	right.innerHTML =            "<br><b>cordinates</b><br>x: "+hand.right.points  .x.map(function(each_element){ return round(each_element) }).toString().replace(/,0/g, ' ').replace(/0.00/g, '.00')
+	right.innerHTML +=							      "<br>y: "+hand.right.points  .y.map(function(each_element){ return round(each_element) }).toString().replace(/,0/g, ' ').replace(/0.00/g, '.00')
+	right.innerHTML +=  "<br><b>distance</b> from wrist<br>x: "+hand.right.distance.x.map(function(each_element){ return round(each_element) }).toString().replace(/,0/g, ' ').replace(/0.00/g, '.00')
+	right.innerHTML +=            				      "<br>y: "+hand.right.distance.y.map(function(each_element){ return round(each_element) }).toString().replace(/,0/g, ' ').replace(/0.00/g, '.00')
+	right.innerHTML +=      "<br><b>normalized</b> data<br>x: "+hand.right.normal  .x.map(function(each_element){ return round(each_element) }).toString().replace(/,0/g, ' ').replace(/0.00/g, '.00').replace(/,1/g, ' 1').replace(/1.00/g, '<furthest style="color:red">1.0</furthest>')
+	right.innerHTML +=            				      "<br>y: "+hand.right.normal  .y.map(function(each_element){ return round(each_element) }).toString().replace(/,0/g, ' ').replace(/0.00/g, '.00').replace(/,1/g, ' 1').replace(/1.00/g, '<furthest style="color:red">1.0</furthest>')
 	
-	left .innerHTML =            "<br><b>cordinates</b><br>x: "+hand.left.points  .x.map(function(each_element){ return round(each_element) })
-	left .innerHTML +=            			          "<br>y: "+hand.left.points  .y.map(function(each_element){ return round(each_element) })
-	left .innerHTML +=  "<br><b>distance</b> from wrist<br>x: "+hand.left.distance.x.map(function(each_element){ return round(each_element) })
-	left .innerHTML +=            					  "<br>y: "+hand.left.distance.y.map(function(each_element){ return round(each_element) })
-	left .innerHTML +=      "<br><b>normalized</b> data<br>x: "+hand.left.normal  .x.map(function(each_element){ return round(each_element) })
-	left .innerHTML +=            				      "<br>y: "+hand.left.normal  .y.map(function(each_element){ return round(each_element) })
+	left .innerHTML =            "<br><b>cordinates</b><br>x: "+hand.left.points  .x.map(function(each_element){ return round(each_element) }).toString().replace(/,0/g, ' ').replace(/0.00/g, '.00')
+	left .innerHTML +=            			          "<br>y: "+hand.left.points  .y.map(function(each_element){ return round(each_element) }).toString().replace(/,0/g, ' ').replace(/0.00/g, '.00')
+	left .innerHTML +=  "<br><b>distance</b> from wrist<br>x: "+hand.left.distance.x.map(function(each_element){ return round(each_element) }).toString().replace(/,0/g, ' ').replace(/0.00/g, '.00')
+	left .innerHTML +=            					  "<br>y: "+hand.left.distance.y.map(function(each_element){ return round(each_element) }).toString().replace(/,0/g, ' ').replace(/0.00/g, '.00')
+	left .innerHTML +=      "<br><b>normalized</b> data<br>x: "+hand.left.normal  .x.map(function(each_element){ return round(each_element) }).toString().replace(/,0/g, ' ').replace(/0.00/g, '.00').replace(/,1/g, ' 1').replace(/1.00/g, '<furthest style="color:red">1.0</furthest>')
+	left .innerHTML +=            				      "<br>y: "+hand.left.normal  .y.map(function(each_element){ return round(each_element) }).toString().replace(/,0/g, ' ').replace(/0.00/g, '.00').replace(/,1/g, ' 1').replace(/1.00/g, '<furthest style="color:red">1.0</furthest>')
 }
 
 // round printed data to 2 decimals
@@ -227,6 +227,18 @@ function predict(e, handedness){
 			// returns an array of probabilty for each hand sign
 			var probabilty = prediction.dataSync();
 			
+			probabilty.forEach(myFunction);
+
+			function myFunction(item, index) {
+			  console.log(handsigns[index], item)
+				
+				if(handedness == 'left'){
+					document.getElementsByClassName(handsigns[index])[1].value = (item * 100).toFixed(1)
+					}
+				else {
+						document.getElementsByClassName(handsigns[index])[0].value = (item * 100).toFixed(1)
+					}
+			}
 			// returns index of highest likely hand sign
 			var getIndex = probabilty.indexOf(Math.max(...probabilty))
 			
@@ -249,13 +261,15 @@ function showResult(e, handedness){
 		
 		// only play MIDI if hand has been the same sign 10 frames in a row
 		if(currentLeft[1] > 10 && currentLeft[0] != e){
-			
+			document.getElementsByClassName(handsigns[currentLeft[0]])[1].style.color =  'black';
+
 			currentLeft[0] = e;
 			currentLeft[1] = 0;
 			
 			document.getElementById('lefthand').src = "img/" + handsigns[e] + ".png";
 			document.getElementById('leftprediction').innerHTML = handsigns[e];
-			
+			document.getElementsByClassName(handsigns[e])[1].style.color =  'red';
+
 			leftMIDI.allNotesOff(0); // clear current MIDI note
 			leftMIDI.noteOn(0, solfegeMIDI[handsigns[e]] + 60, 127); // play MIDI
 			
@@ -268,13 +282,14 @@ function showResult(e, handedness){
 	else if(handedness == 'right'){
 		
 		if(currentRight[1] > 10 && currentRight[0] != e){
-			
+			document.getElementsByClassName(handsigns[currentRight[0]])[0].style.color =  'black';
 			currentRight[0] = e;
 			currentRight[1] = 0;
 			
 			document.getElementById('righthand').src = "img/" + handsigns[e] + ".png";
 			document.getElementById('rightprediction').innerHTML =  handsigns[e];
-			
+			document.getElementsByClassName(handsigns[e])[0].style.color =  'red';
+
 			rightMIDI.allNotesOff(0);
 			rightMIDI.noteOn(0, solfegeMIDI[handsigns[e]] + 60, 127);
 			
