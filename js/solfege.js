@@ -239,7 +239,7 @@ function predict(e, handedness){
 			
 			// run current data through model
 			const prediction =  model.predict(tf.tensor2d(pred_array,[1,42]));
-			
+			console.log(prediction)
 			// returns an array of probabilty for each hand sign
 			var probabilty = prediction.dataSync();
 			

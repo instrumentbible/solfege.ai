@@ -60,18 +60,16 @@ def train_model(X_train, X_test, Y_train, Y_test):
 
     model = Sequential()
     model.add(Input(shape=(42,)))
+    model.add(Dense(1000, activation='relu'))
+    model.add(Dropout(0.1))
+    model.add(Dense(1000, activation='relu'))
+    model.add(Dropout(0.2))
     model.add(Dense(100, activation='relu'))
-    model.add(Dropout(0.5))
-    model.add(Dense(100, activation='relu'))
-    model.add(Dropout(0.5))
-    model.add(Dense(100, activation='relu'))
-
     model.add(Dense(len(CATEGORIES), activation='softmax'))
     model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
 
     history = model.fit(X_train, Y_train, epochs=100, validation_data=(X_test, Y_test))
 
-    '''
     # summarize history for accuracy
     plt.plot(history.history['accuracy'])
     plt.plot(history.history['val_accuracy'])
@@ -88,7 +86,6 @@ def train_model(X_train, X_test, Y_train, Y_test):
     plt.xlabel('epoch')
     plt.legend(['train', 'test'], loc='upper left')
     plt.show()
-    '''
 
     return model
 
@@ -101,12 +98,28 @@ def evaluate_model(model, X_test, Y_test):
 
 def main():
 
+    #load in data 
     X,Y = load_data()
-    X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.33, random_state=42)
-    model = train_model(X_train, X_test, Y_train, Y_test)
-    evaluate_model(model, X_test, Y_test)
-    tfjs.converters.save_keras_model(model, "new_model")
 
+    #split data into train, validation, and test 
+    #
+    # train: 60% of data
+    # val: 20% of data
+    # test: 20% of data
+
+    #split data set into train and test
+    X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.4, random_state=42)
+    #split data into test and validation
+    X_val, X_test, Y_val, Y_test = train_test_split(X_test, Y_test, test_size=0.5, random_state=42)
+
+    #train model
+    model = train_model(X_train, X_val, Y_train, Y_val)
+
+    #evaluate model performance with test data
+    evaluate_model(model, X_test, Y_test)
+
+    #save model 
+    tfjs.converters.save_keras_model(model, "new_model")
 
 
 if __name__ == '__main__':
