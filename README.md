@@ -25,3 +25,28 @@ go to `http://localhost:1234`
 * make a hand sign
 * click the button to create training data
 * it will wait 1 second, start recording data for 30 seconds, then save a file with the data
+
+
+
+## Hand Signs
+
+| hand sign | name | pitch class <br>(distance from C) | equivalent note |
+| :-: | :-: |:-: |:-: |
+|<img src="https://github.com/instrumentbible/solfege/blob/main/img/do.png?raw=true" width="100" height="100" /> | do | 0  | C  |
+|<img src="https://github.com/instrumentbible/solfege/blob/main/img/di.png?raw=true" width="100" height="100" /> | di | 1  | C# |
+|<img src="https://github.com/instrumentbible/solfege/blob/main/img/ra.png?raw=true" width="100" height="100" /> | ra | 1  | Db |
+|<img src="https://github.com/instrumentbible/solfege/blob/main/img/re.png?raw=true" width="100" height="100" /> | re | 2  | D  |
+|<img src="https://github.com/instrumentbible/solfege/blob/main/img/ri.png?raw=true" width="100" height="100" /> | ri | 3  | D# | 
+|<img src="https://github.com/instrumentbible/solfege/blob/main/img/me.png?raw=true" width="100" height="100" /> | me | 3  | Eb |
+|<img src="https://github.com/instrumentbible/solfege/blob/main/img/mi.png?raw=true" width="100" height="100" /> | mi | 4  | E  |
+|<img src="https://github.com/instrumentbible/solfege/blob/main/img/fa.png?raw=true" width="100" height="100" /> | fa | 5  | F  |
+|<img src="https://github.com/instrumentbible/solfege/blob/main/img/fi.png?raw=true" width="100" height="100" /> | fi | 6  | F# |
+|<img src="https://github.com/instrumentbible/solfege/blob/main/img/se.png?raw=true" width="100" height="100" /> | se | 6  | Gb |
+|<img src="https://github.com/instrumentbible/solfege/blob/main/img/so.png?raw=true" width="100" height="100" /> | so | 7  | G  |
+|<img src="https://github.com/instrumentbible/solfege/blob/main/img/si.png?raw=true" width="100" height="100" /> | si | 8  | G# |
+|<img src="https://github.com/instrumentbible/solfege/blob/main/img/le.png?raw=true" width="100" height="100" /> | le | 8  | Ab |
+|<img src="https://github.com/instrumentbible/solfege/blob/main/img/la.png?raw=true" width="100" height="100" /> | la | 9  | A  |
+|<img src="https://github.com/instrumentbible/solfege/blob/main/img/li.png?raw=true" width="100" height="100" /> | li | 10 | A# |
+|<img src="https://github.com/instrumentbible/solfege/blob/main/img/te.png?raw=true" width="100" height="100" /> | te | 10 | Bb |
+|<img src="https://github.com/instrumentbible/solfege/blob/main/img/ti.png?raw=true" width="100" height="100" /> | ti | 11 | B  |
+
