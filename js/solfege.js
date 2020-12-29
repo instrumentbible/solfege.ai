@@ -121,11 +121,10 @@ document.querySelectorAll('button').forEach(btn => {
 
 		   // push 2000 sets of data, at 25ms interval
 		   for (let i = 1; i < 1000; i++) {
-			 setTimeout(function timer() {console.log(hand.left)
+			 setTimeout(function timer() {
 				 if(hand.left.points.x[0] ){ tempData.push(hand.left)  }
 				 if(hand.right.points.x[0]){ tempData.push(hand.right) }
 				 print("training... step " + (i+ 1));
-				 // console.log(hand.left.distance.y); console.log(hand.right.distance.y)
 				 if(i == 999){saveData()}
 			 }, i * 25);
 		   }
@@ -141,7 +140,7 @@ document.querySelectorAll('button').forEach(btn => {
 // print
 function print(e){
 	log.innerHTML = e;
-	console.log(e)
+	console.log(e);
 }
 
 
@@ -223,12 +222,29 @@ const predictFrame = async (pred_array, handedness) => {
 		
 	// if model is loaded
 	if (model){
+		
+		
+		
+		
+		
 		// run current data through model
 		const prediction =  model.predict(tf.tensor2d(pred_array,[1,42]));
 		
 		// returns an array of probabilty for each hand sign
 		var probabilty = prediction.dataSync();
-
+		
+		
+		// if Fa or Fi,  detect if thumb is up or down
+		if(probabilty[7] > 0.8 || probabilty[8] > 0.8 ){
+			if(handedness == 'left'){
+				if(hand.left.points.y[4] < hand.left.points.y[17]){probabilty[7] = 0;probabilty[8] = 1;}else{probabilty[7] = 1;probabilty[8] = 0;}
+			}
+			else {
+				if(hand.right.points.y[4] < hand.right.points.y[17]){probabilty[7] = 0;probabilty[8] = 1;}else{probabilty[7] = 1;probabilty[8] = 0;}
+			}
+		}
+		
+		
 		probabilty.forEach(
 			function (e, i, arr) {
 				
@@ -266,9 +282,8 @@ function showResult(e, handedness){
 		
 	if(handedness == 'left'){
 
-		// only play MIDI if hand has been the same sign 10 frames in a row
-		if(currentLeft[1] > 10 && currentLeft[0] != e){		console.log('sdfgdsfg')
-
+		// only play MIDI if hand has been the same sign 5 frames in a row
+		if(currentLeft[1] > 5 && currentLeft[0] != e){
 			document.getElementsByClassName(handsigns[currentLeft[0]])[1].style.color =  'black';
 			currentLeft[0] = e;
 			currentLeft[1] = 0;
@@ -286,7 +301,7 @@ function showResult(e, handedness){
 	}
 		
 	else if(handedness == 'right'){
-		if(currentRight[1] > 10 && currentRight[0] != e){
+		if(currentRight[1] >15 && currentRight[0] != e){
 			document.getElementsByClassName(handsigns[currentRight[0]])[0].style.color =  'black';
 			currentRight[0] = e;
 			currentRight[1] = 0;

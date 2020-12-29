@@ -8,6 +8,8 @@
 	<script src="js/JZZ.js"></script>
 	<script src="js/JZZ.synth.Tiny.js"></script>
 	<script src="js/JZZ.input.Kbd.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/jzz-gui-select"></script>
+
 	<script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js"	crossorigin="anonymous"></script>
 	<script src="https://cdn.jsdelivr.net/npm/@mediapipe/control_utils/control_utils.js"	crossorigin="anonymous"></script>
 	<script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js"	crossorigin="anonymous"></script>
@@ -21,7 +23,6 @@
 	<canvas width="640" height="360"		></canvas>
   </div>
   
-
   <table id="results">
 	  <tr>
 		  <td><img id="righthand" src="img/do.png"></img></br><span id="rightprediction"></span></br><div id="rightMIDI"></></td>
@@ -317,7 +318,7 @@
   
   
   <table><hr />
-	  <b>normalized</b> (distance normalized 1 to 0)
+	  <b>normalized</b> (distance normalized 0 to 1)
 		  <tr class="xnormalRight">
 
 			  <td><input /></td>
@@ -373,7 +374,7 @@
   </td>
 <td>
   <table><hr />
-	  <b>normalized</b>  (distance normalized 1 to 0)
+	  <b>normalized</b>  (distance normalized 0 to 1)
 	  <tr class="xnormalLeft">
 
 		  <td><input /></td>
@@ -461,6 +462,12 @@
   <br><br>
   </div>
   <hr />
+  
+  <div>
+  MIDI Out
+  <select id="midi_out"></select>
+</div>
+  <hr>
   <footer>
 	  <p>a project by <a href="https://github.com/ryankemmer" >Ryan Kemmer</a> and <a href="https://github.com/joshstovall">Josh Stovall</a></p>
   </footer>
