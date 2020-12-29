@@ -56,10 +56,8 @@ function onResults(results) {
 					var y		= new Promise((resolve, reject) => { hand.right.distance.y.forEach((e, i, a) => { hand.right.normal.y.push(normalize(e, Math.max(...hand.right.distance.y))); if (i === a.length -1) {resolve();} }); });
 					x.then(() => { y.then(() => { resolve() })});
 				});
-				points.then(() => { difference.then(() => { normal.then(() => { predict(hand.right, 'right') }); }); });
+				points.then(() => { difference.then(() => { normal.then(() => { predictFrame(hand.right.normal.x.concat(hand.right.normal.y), 'right'); }); }); });
 				showData()
-				
-				
 			}
 
 			// if left hand
@@ -83,14 +81,11 @@ function onResults(results) {
 					var y		= new Promise((resolve, reject) => { hand.left.distance.y.forEach((e, i, a) => { hand.left.normal.y.push(normalize(e, Math.max(...hand.left.distance.y))); if (i === a.length -1) {resolve();} }); });
 					x.then(() => { y.then(() => { resolve() })});
 				});
-				points.then(() => { difference.then(() => { normal.then(() => { predict(hand.left, 'left') }); }); });
+				points.then(() => { difference.then(() => { normal.then(() => { predictFrame(hand.left.normal.x.concat(hand.left.normal.y), 'left'); }); }); });
 				showData()
 			}
-			
-			
 		})
 	}
-	
 
 	// draw hands
 	ctx.save();
@@ -104,7 +99,6 @@ function onResults(results) {
 	}
 	ctx.restore();
 	
-	
 }
 
 // setup hands
@@ -114,10 +108,8 @@ hands.onResults(onResults);
 
 // camera setup
 new Camera(video, { onFrame: async () => { await hands.send({ image: video }); }, width: 1280, height: 720 }).start();
-	
-	
 
-var tempData = []
+var tempData = [];
 // add listener to all buttons
 document.querySelectorAll('button').forEach(btn => {
    btn.addEventListener('click', e => {
@@ -133,7 +125,7 @@ document.querySelectorAll('button').forEach(btn => {
 				 if(hand.left.points.x[0] ){ tempData.push(hand.left)  }
 				 if(hand.right.points.x[0]){ tempData.push(hand.right) }
 				 print("training... step " + (i+ 1));
-				 console.log(hand.left.distance.y); console.log(hand.right.distance.y)
+				 // console.log(hand.left.distance.y); console.log(hand.right.distance.y)
 				 if(i == 999){saveData()}
 			 }, i * 25);
 		   }
@@ -207,67 +199,62 @@ function diff (a, b) {
 }
 
 // normalize values in range of 0 to 1
-function normalize(val, max) {
-	return (val - 0) / (max - 0);
-}
+function normalize(val, max) { return (val - 0) / (max - 0); }
 
 // reverse 0-1 to 1-0, (for fliping left hand X axis data)
-function flip(e) {
-	return (1 - 0) + ((0 - 1) / (1 - 0)) * e;
-};
-	
+function flip(e) {  return (1 - 0) + ((0 - 1) / (1 - 0)) * e; };
 					  
 // change this after training new model
-var handsigns = ['do','re','mi','fa','so','la','ti'];
-var handsigns1 = ['do','di','ra','re','ri','me','mi','fa','fi','se','so','si','le','la','li','te','ti'];
-
-						  
-						  
-
+//var handsigns = ['do','re','mi','fa','so','la','ti'];
+var handsigns = ['do','di','ra','re','ri','me','mi','fa','fi','se','so','si','le','la','li','te','ti'];
+						
 // midi value for each handsign
 var solfegeMIDI = {	'do':0, 'di':1, 'ra':1, 're':2, 'ri':3, 'me':3, 'mi':4, 'fa':5, 'fi':6, 'se':6, 'so':7, 'si':8, 'le':8, 'la':9, 'li':10, 'te':10, 'ti':11 }
-						  
-// predict
-function predict(e, handedness){
-		const currentData = e.normal.x.concat(e.normal.y);
 
-		//async function to make prediction
-		const predictFrame = async (pred_array) => {
-			
-			// load model
-			var model = await tf.loadLayersModel('models/new_model/model.json');
-			
-			// run current data through model
-			const prediction =  model.predict(tf.tensor2d(pred_array,[1,42]));
-			console.log(prediction)
-			// returns an array of probabilty for each hand sign
-			var probabilty = prediction.dataSync();
-			
-			probabilty.forEach(myFunction);
 
-			function myFunction(e, i) {
-				
-				if(handedness == 'left'){
-					document.getElementsByClassName(handsigns[i])[1].value = (e * 100).toFixed(1);
-					document.getElementsByClassName(handsigns[i])[1].style.opacity =   e + 0.2;
-					document.getElementsByClassName("probLeft")[0].getElementsByTagName('td')[handsigns.indexOf(handsigns[i])].getElementsByTagName('img')[0].style.opacity = e 
-					}
-				else {
-					document.getElementsByClassName(handsigns[i])[0].value = (e * 100).toFixed(1);
-					document.getElementsByClassName(handsigns[i])[0].style.opacity =   e + 0.2;
-					document.getElementsByClassName("probRight")[0].getElementsByTagName('td')[handsigns.indexOf(handsigns[i])].getElementsByTagName('img')[0].style.opacity = e
-
-					}
-			}
-			// returns index of highest likely hand sign
-			var getIndex = probabilty.indexOf(Math.max(...probabilty))
-			
-			showResult( getIndex, handedness)
-		}
-
-		predictFrame(currentData);
+var model;
+// load the model
+const loadModel = async (pred_array, handedness) => {
+	model = await tf.loadLayersModel('models/new_model/model.json');
 }
+					  
+//async function to make prediction
+const predictFrame = async (pred_array, handedness) => {
 		
+	// if model is loaded
+	if (model){
+		// run current data through model
+		const prediction =  model.predict(tf.tensor2d(pred_array,[1,42]));
+		
+		// returns an array of probabilty for each hand sign
+		var probabilty = prediction.dataSync();
+
+		probabilty.forEach(
+			function (e, i, arr) {
+				
+			if(handedness == 'left'){
+				document.getElementsByClassName(handsigns[i])[1].value = (e * 100)//.toFixed(1);
+				document.getElementsByClassName(handsigns[i])[1].style.opacity =   e + 0.2;
+				document.getElementsByClassName("probLeft")[0].getElementsByTagName('td')[i].getElementsByTagName('img')[0].style.opacity = e+ 0.1
+			}
+			else {
+				document.getElementsByClassName(handsigns[i])[0].value = (e * 100)//.toFixed(1);
+				document.getElementsByClassName(handsigns[i])[0].style.opacity =   e + 0.2;
+				document.getElementsByClassName("probRight")[0].getElementsByTagName('td')[i].getElementsByTagName('img')[0].style.opacity = e + 0.1
+			}
+		})
+
+					
+		// returns index of highest likely hand sign
+		var getIndex = probabilty.indexOf(Math.max(...probabilty));
+		
+		 showResult( getIndex, handedness)
+	}
+		
+	// else, load the model
+	else { loadModel()}
+}
+
 
 // keep track of the current hand sign for each hand
 // [current sign index, number of times in a row]
@@ -278,17 +265,16 @@ var currentRight = [0,0]
 function showResult(e, handedness){
 		
 	if(handedness == 'left'){
-		
-		// only play MIDI if hand has been the same sign 10 frames in a row
-		if(currentLeft[1] > 10 && currentLeft[0] != e){
-			document.getElementsByClassName(handsigns[currentLeft[0]])[1].style.color =  'black';
 
+		// only play MIDI if hand has been the same sign 10 frames in a row
+		if(currentLeft[1] > 10 && currentLeft[0] != e){		console.log('sdfgdsfg')
+
+			document.getElementsByClassName(handsigns[currentLeft[0]])[1].style.color =  'black';
 			currentLeft[0] = e;
 			currentLeft[1] = 0;
 			
 			document.getElementById('lefthand').src = "img/" + handsigns[e] + ".png";
 			document.getElementById('leftprediction').innerHTML = handsigns[e];
-			//document.getElementsByClassName(handsigns[e])[1].style.color =  'red';
 
 			leftMIDI.allNotesOff(0); // clear current MIDI note
 			leftMIDI.noteOn(0, solfegeMIDI[handsigns[e]] + 60, 127); // play MIDI
@@ -300,7 +286,6 @@ function showResult(e, handedness){
 	}
 		
 	else if(handedness == 'right'){
-		
 		if(currentRight[1] > 10 && currentRight[0] != e){
 			document.getElementsByClassName(handsigns[currentRight[0]])[0].style.color =  'black';
 			currentRight[0] = e;
@@ -308,7 +293,6 @@ function showResult(e, handedness){
 			
 			document.getElementById('righthand').src = "img/" + handsigns[e] + ".png";
 			document.getElementById('rightprediction').innerHTML =  handsigns[e];
-			//document.getElementsByClassName(handsigns[e])[0].style.color =  'red';
 
 			rightMIDI.allNotesOff(0);
 			rightMIDI.noteOn(0, solfegeMIDI[handsigns[e]] + 60, 127);
