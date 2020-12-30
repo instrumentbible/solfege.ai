@@ -12,8 +12,10 @@ from sklearn.metrics import confusion_matrix
 from mlxtend.plotting import plot_confusion_matrix
 import matplotlib.pyplot as plt
 import tensorflowjs as tfjs
+import argparse
 
-CATEGORIES = ['do','di','ra','re','ri','me','mi','fa','fi','se','so','si','le','la','li','te','ti'] #categories for classification
+FEATURE_SIZE = 42 #specify feature size (21 for x coordinates, 21 for y coordinates)
+CATEGORIES = [] #categories for classification (GLOBAL VARIABLE)
 
 #function that counts the total number of datapoints 
 def count_data():
@@ -24,10 +26,7 @@ def count_data():
             total += len(data)
     return total
 
-FEATURE_SIZE = 42 #specify feature size (21 for x coordinates, 21 for y coordinates)
-DATA_SIZE = count_data() #find data size
-
-def load_data():
+def load_data(DATA_SIZE):
 
     X = np.zeros((DATA_SIZE,FEATURE_SIZE))
     Y = np.zeros((DATA_SIZE,1))
@@ -96,10 +95,27 @@ def evaluate_model(model, X_test, Y_test):
     fig, ax = plot_confusion_matrix(conf_mat=matrix,class_names=CATEGORIES,colorbar=True)
     plt.show()
 
-def main():
+def main(args):
+    
+    #parse arg 
+    scale = args.scale
+
+    #set scale
+    if scale == 'major':
+        CATEGORIES[:] = ['do','re','mi','fa','so','la','ti']
+    elif scale == 'minor':
+        CATEGORIES[:] = ['do','re','me','fa','so','le','te']
+    elif scale == 'chromatic':
+        CATEGORIES[:] = ['do','di','ra','re','ri','me','mi','fa','fi','se','so','si','le','la','li','te','ti']
+    else:
+        print('ERROR: enter a valid argument.')
+        return
+
+    #set data size
+    DATA_SIZE = count_data()
 
     #load in data 
-    X,Y = load_data()
+    X,Y = load_data(DATA_SIZE)
 
     #split data into train, validation, and test 
     #
@@ -108,9 +124,9 @@ def main():
     # test: 20% of data
 
     #split data set into train and test
-    X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.4, random_state=42)
+    X_train, X_test_set, Y_train, Y_test_set = train_test_split(X, Y, test_size=0.4, random_state=42)
     #split data into test and validation
-    X_val, X_test, Y_val, Y_test = train_test_split(X_test, Y_test, test_size=0.5, random_state=42)
+    X_val, X_test, Y_val, Y_test = train_test_split(X_test_set, Y_test_set, test_size=0.5, random_state=42)
 
     #train model
     model = train_model(X_train, X_val, Y_train, Y_val)
@@ -119,8 +135,11 @@ def main():
     evaluate_model(model, X_test, Y_test)
 
     #save model 
-    tfjs.converters.save_keras_model(model, "new_model")
+    tfjs.converters.save_keras_model(model, scale)
 
 
 if __name__ == '__main__':
-    main()
+    argparser = argparse.ArgumentParser()
+    argparser.add_argument('-s', '--scale', help='Type of model to train. Can be major, minor, or chromatic.')
+    args = argparser.parse_args()
+    main(args)

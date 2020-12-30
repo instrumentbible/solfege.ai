@@ -56,7 +56,7 @@ function onResults(results) {
 					var y		= new Promise((resolve, reject) => { hand.right.distance.y.forEach((e, i, a) => { hand.right.normal.y.push(normalize(e, Math.max(...hand.right.distance.y))); if (i === a.length -1) {resolve();} }); });
 					x.then(() => { y.then(() => { resolve() })});
 				});
-				points.then(() => { difference.then(() => { normal.then(() => { predictFrame(hand.right.normal.x.concat(hand.right.normal.y), 'right'); }); }); });
+				points.then(() => { difference.then(() => { normal.then(() => { predictFrame(hand.right.normal.x.concat(hand.right.normal.y), 'right', scale); }); }); });
 				showData()
 			}
 
@@ -81,7 +81,7 @@ function onResults(results) {
 					var y		= new Promise((resolve, reject) => { hand.left.distance.y.forEach((e, i, a) => { hand.left.normal.y.push(normalize(e, Math.max(...hand.left.distance.y))); if (i === a.length -1) {resolve();} }); });
 					x.then(() => { y.then(() => { resolve() })});
 				});
-				points.then(() => { difference.then(() => { normal.then(() => { predictFrame(hand.left.normal.x.concat(hand.left.normal.y), 'left'); }); }); });
+				points.then(() => { difference.then(() => { normal.then(() => { predictFrame(hand.left.normal.x.concat(hand.left.normal.y), 'left', scale); }); }); });
 				showData()
 			}
 		})
@@ -202,30 +202,63 @@ function normalize(val, max) { return (val - 0) / (max - 0); }
 
 // reverse 0-1 to 1-0, (for fliping left hand X axis data)
 function flip(e) {  return (1 - 0) + ((0 - 1) / (1 - 0)) * e; };
-					  
-// change this after training new model
-//var handsigns = ['do','re','mi','fa','so','la','ti'];
-var handsigns = ['do','di','ra','re','ri','me','mi','fa','fi','se','so','si','le','la','li','te','ti'];
-						
+
+
+// load the model
+const loadModel = async (scale) => {
+	if (scale == 'major'){
+		model = await tf.loadLayersModel('models/major/model.json');
+		console.log('major loaded')
+	}
+	else if(scale == 'chromatic'){
+		model = await tf.loadLayersModel('models/chromatic/model.json');
+		console.log('chromatic loaded')
+	}
+	else if(scale == 'minor'){
+		model = await tf.loadLayersModel('models/minor/model.json');
+		console.log('minor loaded')
+	}
+}
+
+var handsigns
+var scale
+var model
+
 // midi value for each handsign
 var solfegeMIDI = {	'do':0, 'di':1, 'ra':1, 're':2, 'ri':3, 'me':3, 'mi':4, 'fa':5, 'fi':6, 'se':6, 'so':7, 'si':8, 'le':8, 'la':9, 'li':10, 'te':10, 'ti':11 }
 
+//load default (major scale)
+scale = 'major'
+handsigns = ['do','re','mi','fa','so','la','ti']
+loadModel(scale)
 
-var model;
-// load the model
-const loadModel = async (pred_array, handedness) => {
-	model = await tf.loadLayersModel('models/new_model/model.json');
-}
+//event listener for scale
+document.querySelectorAll('input').forEach(btn => {
+	btn.addEventListener('click', e => {
+		if (btn.id == 'major'){
+			scale = 'major'
+			handsigns = ['do','re','mi','fa','so','la','ti']
+			loadModel(scale)
+		}
+		else if (btn.id == 'minor'){
+			scale = 'minor'
+			handsigns = ['do','re','me','fa','so','le','te']
+			loadModel(scale)
+		}
+		else if (btn.id == 'chromatic'){
+			scale = 'chromatic'
+			handsigns = ['do','di','ra','re','ri','me','mi','fa','fi','se','so','si','le','la','li','te','ti']
+			loadModel(scale)
+		}
+
+	});
+});
 					  
 //async function to make prediction
-const predictFrame = async (pred_array, handedness) => {
-		
+const predictFrame = async (pred_array, handedness, scale) => {
+
 	// if model is loaded
 	if (model){
-		
-		
-		
-		
 		
 		// run current data through model
 		const prediction =  model.predict(tf.tensor2d(pred_array,[1,42]));
@@ -233,17 +266,17 @@ const predictFrame = async (pred_array, handedness) => {
 		// returns an array of probabilty for each hand sign
 		var probabilty = prediction.dataSync();
 		
-		
-		// if Fa or Fi,  detect if thumb is up or down
-		if(probabilty[7] > 0.8 || probabilty[8] > 0.8 ){
-			if(handedness == 'left'){
-				if(hand.left.points.y[4] < hand.left.points.y[17]){probabilty[7] = 0;probabilty[8] = 1;}else{probabilty[7] = 1;probabilty[8] = 0;}
-			}
-			else {
-				if(hand.right.points.y[4] < hand.right.points.y[17]){probabilty[7] = 0;probabilty[8] = 1;}else{probabilty[7] = 1;probabilty[8] = 0;}
+		if (scale == 'chromatic'){
+			// if Fa or Fi,  detect if thumb is up or down
+			if(probabilty[7] > 0.8 || probabilty[8] > 0.8 ){
+				if(handedness == 'left'){
+					if(hand.left.points.y[4] < hand.left.points.y[17]){probabilty[7] = 0;probabilty[8] = 1;}else{probabilty[7] = 1;probabilty[8] = 0;}
+				}
+				else {
+					if(hand.right.points.y[4] < hand.right.points.y[17]){probabilty[7] = 0;probabilty[8] = 1;}else{probabilty[7] = 1;probabilty[8] = 0;}
+				}
 			}
 		}
-		
 		
 		probabilty.forEach(
 			function (e, i, arr) {
@@ -264,11 +297,11 @@ const predictFrame = async (pred_array, handedness) => {
 		// returns index of highest likely hand sign
 		var getIndex = probabilty.indexOf(Math.max(...probabilty));
 		
-		 showResult( getIndex, handedness)
+		showResult( getIndex, handedness)
 	}
 		
 	// else, load the model
-	else { loadModel()}
+	else { loadModel(scale)}
 }
 
 
