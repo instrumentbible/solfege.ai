@@ -224,6 +224,8 @@ var handsigns
 var scale
 var model
 
+var handsignsAll = ['do','di','ra','re','ri','me','mi','fa','fi','se','so','si','le','la','li','te','ti'];
+									  
 // midi value for each handsign
 var solfegeMIDI = {	'do':0, 'di':1, 'ra':1, 're':2, 'ri':3, 'me':3, 'mi':4, 'fa':5, 'fi':6, 'se':6, 'so':7, 'si':8, 'le':8, 'la':9, 'li':10, 'te':10, 'ti':11 }
 
@@ -282,14 +284,14 @@ const predictFrame = async (pred_array, handedness, scale) => {
 			function (e, i, arr) {
 				
 			if(handedness == 'left'){
-				document.getElementsByClassName(handsigns[i])[1].value = (e * 100)//.toFixed(1);
+				document.getElementsByClassName(handsigns[i])[1].value = (e * 100);
 				document.getElementsByClassName(handsigns[i])[1].style.opacity =   e + 0.2;
-				document.getElementsByClassName("probLeft")[0].getElementsByTagName('td')[i].getElementsByTagName('img')[0].style.opacity = e+ 0.1
+				document.getElementsByClassName("probLeft")[0].getElementsByTagName('td')[handsignsAll.indexOf(handsigns[i])].getElementsByTagName('img')[0].style.opacity = e+ 0.1
 			}
 			else {
-				document.getElementsByClassName(handsigns[i])[0].value = (e * 100)//.toFixed(1);
+				document.getElementsByClassName(handsigns[i])[0].value = (e * 100);
 				document.getElementsByClassName(handsigns[i])[0].style.opacity =   e + 0.2;
-				document.getElementsByClassName("probRight")[0].getElementsByTagName('td')[i].getElementsByTagName('img')[0].style.opacity = e + 0.1
+				document.getElementsByClassName("probRight")[0].getElementsByTagName('td')[handsignsAll.indexOf(handsigns[i])].getElementsByTagName('img')[0].style.opacity = e + 0.1
 			}
 		})
 
