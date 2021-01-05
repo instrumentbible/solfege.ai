@@ -11,3 +11,20 @@ leftMIDI.connect(synth);
 var midi_out = JZZ.gui.SelectMidiOut({ at: 'midi_out' });
 rightMIDI.connect(midi_out);
 leftMIDI.connect(midi_out);
+
+
+
+// mute piano
+var checkbox = document.querySelector("input[name=mute]");
+
+checkbox.addEventListener('change', function() {
+  if (this.checked) {
+	  rightMIDI.disconnect(synth);
+	  leftMIDI.disconnect(synth);
+
+  } else {
+	  rightMIDI.connect(synth);
+	  leftMIDI.connect(synth);
+
+  }
+});
