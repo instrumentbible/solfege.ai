@@ -22,7 +22,7 @@ function onResults(results) {
 
 	// if a hand is being tracked...
 	if(results.multiHandedness){
-		
+		console.log(results)
 		// clear hand data
 		hand.left  = { points: { x:[], y:[] }, distance: { x:[], y:[] }, normal: { x:[], y:[] } }
 		hand.right = { points: { x:[], y:[] }, distance: { x:[], y:[] }, normal: { x:[], y:[] } }
