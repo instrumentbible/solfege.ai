@@ -1,4 +1,4 @@
-# solfege.ai
+# solfege.ai ✋ 🎹
 Detect solfege hand signs using machine learning ([live demo](https://instrumentbible.github.io/solfege.ai/))
 > a project by [Ryan Kemmer](https://github.com/ryankemmer) and [Josh Stovall](https://github.com/joshstovall)
 
