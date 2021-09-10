@@ -1,6 +1,6 @@
 # solfege.ai ✋ 🎹
-Detect solfege hand signs using machine learning ([live demo](https://instrumentbible.github.io/solfege.ai/))
-> a project by [Ryan Kemmer](https://github.com/ryankemmer) and [Josh Stovall](https://github.com/joshstovall)
+Detect solfege hand signs using machine learning ([live demo](https://solfege.ai))
+> a project by [Ryan Kemmer](https://github.com/ryankemmer) and [Josh Stovall](https://joshstovall.com)
 
 ## About
 We have developed a system that allows the user to 'play' [solfege hand signs](https://en.wikipedia.org/wiki/Solfege) as a MIDI instrument.    This technology could have practical applications both in music education and creation.
@@ -25,8 +25,6 @@ go to `http://localhost:1234`
 * make a hand sign
 * click the button to create training data
 * it will wait 1 second, start recording data for 30 seconds, then save a file with the data
-
-
 
 ## Hand Signs
 
@@ -58,7 +56,6 @@ Any contributions you make are **greatly appreciated**. Any bugs and change requ
 [![Square](https://img.shields.io/static/v1?label=&message=Donate%20on%20Square&logo=Square&logoColor=white&color=28c101)](https://checkout.square.site/pay/31ba92dcb17e4a9c979c022b690659bb) 
 [![Venmo](https://img.shields.io/static/v1?label=&message=Donate%20on%20Venmo&logo=Venmo&logoColor=white&color=3d95ce)](https://venmo.com/u/instrumentbible) 
 [![PayPal](https://img.shields.io/static/v1?label=&message=Donate%20on%20PayPal&logo=PayPal&logoColor=white&color=009cde)](https://paypal.me/instrumentbible) 
-
 
 # Questions?   
 Please write to [contact@instrument.bible](mailto:contact@instrument.bible) or visit [instrument.bible](https://instrument.bible).
