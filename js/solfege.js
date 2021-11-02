@@ -102,7 +102,7 @@ function onResults(results) {
 }
 
 // setup hands
-const hands = new Hands({locateFile: (file) => { return `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${file}`; }});
+const hands = new Hands({locateFile: (file) => { return `https://cdn.jsdelivr.net/npm/@mediapipe/hands@0.3.1632795355/${file}`; }});
 hands.setOptions({  maxNumHands: 2,  minDetectionConfidence: 0.5,  minTrackingConfidence: 0.5 });
 hands.onResults(onResults);
 
