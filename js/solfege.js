@@ -22,7 +22,6 @@ function onResults(results) {
 
 	// if a hand is being tracked...
 	if(results.multiHandedness){
-		console.log(results)
 		// clear hand data
 		hand.left  = { points: { x:[], y:[] }, distance: { x:[], y:[] }, normal: { x:[], y:[] } }
 		hand.right = { points: { x:[], y:[] }, distance: { x:[], y:[] }, normal: { x:[], y:[] } }
@@ -208,15 +207,12 @@ function flip(e) {  return (1 - 0) + ((0 - 1) / (1 - 0)) * e; };
 const loadModel = async (scale) => {
 	if (scale == 'major'){
 		model = await tf.loadLayersModel('models/major/model.json');
-		console.log('major loaded')
 	}
 	else if(scale == 'chromatic'){
 		model = await tf.loadLayersModel('models/chromatic/model.json');
-		console.log('chromatic loaded')
 	}
 	else if(scale == 'minor'){
 		model = await tf.loadLayersModel('models/minor/model.json');
-		console.log('minor loaded')
 	}
 }
 
